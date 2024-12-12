@@ -21,15 +21,25 @@ const Home = () => {
           }}
         >
           <img
-            style={{ width: "288px", position: "absolute", marginLeft: "40px" }}
+            style={{ width: "288px", position: "absolute", marginTop: "40px" }}
             src={talk}
             alt="err"
           />
-          <img style={{ width: "330px" }} src={model} alt="err" />
+          <img
+            style={{ width: "330px", marginRight: "20px", marginTop: "40px" }}
+            src={model}
+            alt="err"
+          />
         </div>
 
-        {/* mulai bicara card */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            position: "relative",
+          }}
+        >
+          {/* mulai bicara card */}
           <div
             style={{
               display: "flex",

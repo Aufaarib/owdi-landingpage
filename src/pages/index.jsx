@@ -1,8 +1,8 @@
-import talk from "../../styles/assets/img/Talk (1).png";
-import model from "../../styles/assets/img/Models.png";
+import Image from "next/image";
 import { IconMicrophone } from "@tabler/icons-react";
 
-const Home = () => {
+
+export default function Home() {
   return (
     <div
       style={{
@@ -22,12 +22,12 @@ const Home = () => {
         >
           <img
             style={{ width: "288px", position: "absolute", marginTop: "40px" }}
-            src={talk.src}
+            src={`/img/Talk (1).png`}
             alt="err"
           />
           <img
             style={{ width: "330px", marginRight: "20px", marginTop: "40px" }}
-            src={model.src}
+            src={`/img/Models.png`}
             alt="err"
           />
         </div>
@@ -114,6 +114,7 @@ const Home = () => {
             gap: "10px",
             textAlign: "center",
             borderRadius: "16px",
+            marginBottom: "40px",
           }}
         >
           <svg
@@ -175,9 +176,17 @@ const Home = () => {
 
           <p style={{ fontSize: "12px" }}>Film</p>
         </div>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "12px",
+            color: "white",
+            marginBottom: "40px",
+          }}
+        >
+          Copyright © 2024 OWDI. All rights reserved.
+        </p>
       </div>
     </div>
   );
-};
-
-export default Home;
+}

@@ -2,8 +2,8 @@ import { IconMicrophone, IconX } from "@tabler/icons-react";
 
 const Bicara = () => {
     return (
-        <div className="relative bg-[#d6d6d6] mb-[40px] ">
-            <div className="relative mt-4 flex items-center h-[40px]">
+        <div className="relative  mb-[40px] ">
+            <div className="relative mt-4 flex items-center h-[45px] bg-white rounded-t-xl">
                 {/* Posisi di tengah */}
                 <div className="absolute  left-1/2 transform -translate-x-1/2 flex justify-center items-center w-[185px] px-2 py-1 bg-gradient-to-t from-[#EF2328] to-[#FB942B] rounded-tr-xl rounded-bl-xl">
                     <p className="text-[12px] mr-1 text-white">Owdi is Talking</p>
@@ -16,17 +16,29 @@ const Bicara = () => {
                 </button>
             </div>
 
-            <div className="mt-1 flex justify-center items-center ">
-                <div className="w-[360px]">
+            <div className=" flex justify-center items-center bg-white ">
+                <div className="w-full h-[700px]">
+                    <iframe
+                        src="https://avatara-star-livestream.vercel.app/embed?aspect-ratio=9:16"
+                        allow="microphone"
+                        title="Embedded content"
+                        allowFullScreen
+                        style={{ width: "100%", height: "100%" }}
+                        className="rounded-xl"
 
-                    <img src="/img/Models2.png" className="object-cover" alt="icon" />
+                    >
+
+                    </iframe>
+
+
+                    {/* <img src="/img/Models2.png" className="object-cover" alt="icon" /> */}
                 </div>
             </div>
-            <div className="w-full bg-white flex flex-col justify-center p-4 rounded-t-xl">
-                <button className="flex justify-center items-center bg-gradient-to-t from-[#EF2328] to-[#FB942B] text-white py-2 px-16 rounded-full"><p>Bicara</p>
+            <div className="w-full bg-white flex flex-col justify-center p-4 rounded-b-xl">
+                {/* <button className="flex justify-center items-center bg-gradient-to-t from-[#EF2328] to-[#FB942B] text-white py-2 px-16 rounded-full"><p>Bicara</p>
                     <IconMicrophone />
-                </button>
-                <p className="text-center text-xs text-[#718290] mt-2">Microfon sudah siap dipakai</p>
+                </button> */}
+                <p className="text-center text-xs text-[#718290]">Microfon sudah siap dipakai</p>
             </div>
 
         </div>

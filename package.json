@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@tabler/icons-react": "^3.24.0",
+    "axios": "^1.7.9",
     "next": "14.2.17",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sweetalert2": "^11.14.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

@@ -1,3 +1,4 @@
+import LoginModal from "@/components/Modal/LoginModal";
 import { IconVolume } from "@tabler/icons-react";
 import Image from "next/image";
 
@@ -8,12 +9,12 @@ const HomePage = () => {
         { label: "Horor", icon: "/icons/ghost.png", bgColor: "bg-white", textColor: "text-black" },
         { label: "Cerita Anak", icon: "/icons/book.png", bgColor: "bg-white", textColor: "text-black" },
     ];
+    const { openLoginModal } = LoginModal();
     return (
         <div className="relative">
             {/* Icon at the top right corner */}
             <IconVolume className="absolute top-4 right-4 text-white" size={24} />
 
-            {/* Container for images */}
             <div className="flex justify-center items-start relative mt-10">
                 {/* First Image */}
                 <div className="absolute mt-10">
@@ -51,6 +52,7 @@ const HomePage = () => {
                 borderTopRightRadius: '8px',
             }}>
                 <button
+                    onClick={openLoginModal}
                     style={{
                         backgroundImage: "url('/img/union.png')",
                         background: 'linear-gradient(to right, #EF2328, #FB942B)',

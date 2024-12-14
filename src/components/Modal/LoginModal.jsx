@@ -1,12 +1,16 @@
-import React from "react";
+import moment from "moment";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 const LoginModal = () => {
-    const openLoginModal = () => {
-        Swal.fire({
-            title: '',
-            html: `
-                <div class="w-full max-w-sm mx-auto bg-white rounded-lg p-6">
+  const router = useRouter();
+
+  const openLoginModal = () => {
+    Swal.fire({
+      title: "",
+      html: `
+                <div class="w-full max-w-sm mx-auto bg-white rounded-lg p-6 z-50">
                     <div class="flex justify-start items-center mb-4">
                         <img src="/img/logoLogin.png" class="w-[90px] h-[25px] mr-2" alt="logo" />
                         <h2 class="text-2xl font-semibold">Login</h2>
@@ -37,61 +41,62 @@ const LoginModal = () => {
                     </form>
                 </div>
             `,
-            showConfirmButton: false,
-            customClass: {
-                popup: "bg-white rounded-lg shadow-lg p-0",
-            },
-            didOpen: () => {
-                const form = document.getElementById("loginForm");
-                form.addEventListener("submit", async (e) => {
-                    e.preventDefault();
-                    const username = document.getElementById("username").value.trim();
-                    const nomorInput = document.getElementById("nomor");
-                    let nomor = nomorInput.value.trim();
+      showConfirmButton: false,
+      customClass: {
+        popup: "bg-white rounded-lg shadow-lg p-0",
+      },
+      didOpen: () => {
+        const form = document.getElementById("loginForm");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const username = document.getElementById("username").value.trim();
+          const nomorInput = document.getElementById("nomor");
+          let nomor = nomorInput.value.trim();
 
-                    if (nomor.startsWith("0")) {
-                        nomor = nomor.substring(1);
-                    }
-                    nomor = "0" + nomor;
+          if (nomor.startsWith("0")) {
+            nomor = nomor.substring(1);
+          }
+          nomor = "0" + nomor;
 
-                    // Dummy data untuk login
-                    const dummyUsername = "admin";
-                    const dummyNomor = "08123456789";
+          // Dummy data untuk login
+          const dummyUsername = "admin";
+          const dummyNomor = "08123456789";
 
-                    if (username && nomor) {
-                        if (username === dummyUsername && nomor === dummyNomor) {
-                            localStorage.setItem("username", username);
-                            localStorage.setItem("nomor", nomor);
-                            const endTime = Date.now() + 10 * 60 * 1000;
-                            localStorage.setItem("remainingTime", endTime.toString());
-                            Swal.fire({
-                                icon: "success",
-                                title: "Login Berhasil",
-                                text: `Selamat datang, ${username}!`,
-                                showConfirmButton: true,
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Login Gagal",
-                                text: "Username atau nomor handphone salah.",
-                                showConfirmButton: true,
-                            });
-                        }
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Login Gagal",
-                            text: "Harap isi semua kolom.",
-                            showConfirmButton: true,
-                        });
-                    }
-                });
-            },
+          if (username && nomor) {
+            if (username === dummyUsername && nomor === dummyNomor) {
+              localStorage.setItem("username", username);
+              localStorage.setItem("nomor", nomor);
+              // const endTime = Date.now() + 10 * 60 * 1000;
+              localStorage.setItem("remainingTime", "10:00");
+              router.push("/home");
+              Swal.fire({
+                icon: "success",
+                title: "Login Berhasil",
+                text: `Selamat datang, ${username}!`,
+                showConfirmButton: true,
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Login Gagal",
+                text: "Username atau nomor handphone salah.",
+                showConfirmButton: true,
+              });
+            }
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Login Gagal",
+              text: "Harap isi semua kolom.",
+              showConfirmButton: true,
+            });
+          }
         });
-    };
+      },
+    });
+  };
 
-    return { openLoginModal };
+  return { openLoginModal };
 };
 
 export default LoginModal;

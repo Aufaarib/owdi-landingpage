@@ -3,11 +3,11 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 const LoginModal = () => {
-    const openLoginModal = () => {
-        Swal.fire({
-            title: '',
-            html: `
-                <div class="w-full max-w-sm mx-auto bg-white rounded-lg p-6">
+  const openLoginModal = () => {
+    Swal.fire({
+      title: "",
+      html: `
+                <div class="w-full max-w-sm mx-auto bg-white rounded-lg p-6 z-50">
                     <div class="flex justify-start items-center mb-4">
                         <img src="/img/logoLogin.png" class="w-[90px] h-[25px] mr-2" alt="logo" />
                         <h2 class="text-2xl font-semibold">Login</h2>
@@ -40,61 +40,63 @@ const LoginModal = () => {
                     </form>
                 </div>
             `,
-            showConfirmButton: false,
-            customClass: {
-                popup: "bg-white rounded-lg shadow-lg p-0", // Customizing popup for correct padding
-            },
-            didOpen: () => {
-                const form = document.getElementById("loginForm");
-                form.addEventListener("submit", async (e) => {
-                    e.preventDefault();
-                    const username = document.getElementById("username").value;
-                    const nomor = document.getElementById("nomor").value;
+      showConfirmButton: false,
+      customClass: {
+        popup: "bg-white rounded-lg shadow-lg p-0", // Customizing popup for correct padding
+      },
+      didOpen: () => {
+        const form = document.getElementById("loginForm");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const username = document.getElementById("username").value;
+          const nomor = document.getElementById("nomor").value;
 
-                    if (username && nomor) {
-                        try {
-                            const response = await axios.post("/api/login", {
-                                username,
-                                nomor,
-                            });
+          if (username && nomor) {
+            try {
+              const response = await axios.post("/api/login", {
+                username,
+                nomor,
+              });
 
-                            if (response.status === 200) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Login Successful",
-                                    text: `Welcome, ${response.data.username}!`,
-                                    showConfirmButton: true,
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Login Failed",
-                                    text: response.data.message || "Invalid login credentials.",
-                                    showConfirmButton: true,
-                                });
-                            }
-                        } catch (error) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Login Failed",
-                                text: error.response?.data?.message || "An error occurred while logging in.",
-                                showConfirmButton: true,
-                            });
-                        }
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Login Failed",
-                            text: "Please fill out all fields.",
-                            showConfirmButton: true,
-                        });
-                    }
+              if (response.status === 200) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Login Successful",
+                  text: `Welcome, ${response.data.username}!`,
+                  showConfirmButton: true,
                 });
-            },
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Login Failed",
+                  text: response.data.message || "Invalid login credentials.",
+                  showConfirmButton: true,
+                });
+              }
+            } catch (error) {
+              Swal.fire({
+                icon: "error",
+                title: "Login Failed",
+                text:
+                  error.response?.data?.message ||
+                  "An error occurred while logging in.",
+                showConfirmButton: true,
+              });
+            }
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Login Failed",
+              text: "Please fill out all fields.",
+              showConfirmButton: true,
+            });
+          }
         });
-    };
+      },
+    });
+  };
 
-    return { openLoginModal };
+  return { openLoginModal };
 };
 
 export default LoginModal;

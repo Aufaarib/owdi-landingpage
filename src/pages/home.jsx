@@ -1,15 +1,49 @@
 import LoginModal from "@/components/Modal/LoginModal";
 import { IconVolume } from "@tabler/icons-react";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const HomePage = () => {
+    const router = useRouter();
     const menuItems = [
         { label: "Semua Topik", icon: null, bgColor: "bg-[#001A41]", textColor: "text-white" },
         { label: "Film", icon: "/icons/video.png", bgColor: "bg-white", textColor: "text-black" },
         { label: "Horor", icon: "/icons/ghost.png", bgColor: "bg-white", textColor: "text-black" },
         { label: "Cerita Anak", icon: "/icons/book.png", bgColor: "bg-white", textColor: "text-black" },
     ];
+    const [username, setUsername] = useState("");
     const { openLoginModal } = LoginModal();
+
+    const handleSession = async () => {
+        // Tunggu modal login selesai
+        if (!username) {
+            await openLoginModal();
+            getUsername();
+        } else {
+            router.push("/bicara");
+
+        }
+    };
+
+    const getUsername = () => {
+        const storedUsername = localStorage.getItem("username");
+        if (storedUsername) {
+            setUsername(storedUsername);
+        }
+    };
+    useEffect(() => {
+        getUsername();
+
+        const interval = setInterval(() => {
+            if (!username) {
+                getUsername();
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [username]);
+
     return (
         <div className="relative">
             {/* Icon at the top right corner */}
@@ -52,7 +86,7 @@ const HomePage = () => {
                 borderTopRightRadius: '8px',
             }}>
                 <button
-                    onClick={openLoginModal}
+                    onClick={handleSession}
                     style={{
                         backgroundImage: "url('/img/union.png')",
                         background: 'linear-gradient(to right, #EF2328, #FB942B)',

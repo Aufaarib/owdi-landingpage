@@ -23,7 +23,7 @@ const MainLayout = ({ children }) => {
 
             <div
                 style={{
-                    // zIndex: 9999,
+                    zIndex: 9,
                     display: "flex",
                     flexDirection: "column",
                 }}

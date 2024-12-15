@@ -65,7 +65,11 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
             onClick={openTopupModal}
             className="flex justify-center items-center ml-2 bg-gradient-to-r from-transparent to-[#001A41BF] text-white font-bold text-[14px] px-1 pl-10 py-1"
           >
-            <p className="whitespace-nowrap">Tersisa: {remainingTime} Menit</p>
+            <p className="whitespace-nowrap">
+              {remainingTime !== "00:00"
+                ? `Tersisa: ${remainingTime} Menit`
+                : "Waktu Habis"}
+            </p>
             <IconPlus size={24} className="ml-2" />
           </button>
         </div>

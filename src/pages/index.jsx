@@ -209,6 +209,7 @@ export default function Home() {
   return (
     <div
       style={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",

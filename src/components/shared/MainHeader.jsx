@@ -36,13 +36,13 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
   useEffect(() => {
     getUserData();
 
-    // // Sinkronisasi data setiap 1 detik
-    // const interval = setInterval(() => {
-    //   getUserData();
-    // }, 1000);
+    // Sinkronisasi data setiap 1 detik
+    const interval = setInterval(() => {
+      setRemainingTime(localStorage.getItem("remainingTime"));
+    }, 1000);
 
-    // return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(interval);
+  }, [remainingTime]);
 
   return (
     <div
@@ -76,7 +76,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
           className="flex items-center justify-center bg-[#001A41] text-white px-3 py-1 rounded-full"
         >
           <p className="font-semibold text-[14px] mr-2">
-            Tersisa: {remainingTime}
+            Tersisa: {remainingTime} Menit
           </p>
           <IconPlus size={24} />
         </button>

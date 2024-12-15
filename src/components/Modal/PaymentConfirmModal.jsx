@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import formatRupiah from "@/utils/formatRupiah";
+import moment from "moment";
 
 const PaymentConfirmModal = () => {
-  const [remainingTime, setRemainingTime] = useState(null);
+  // const [remainingTime, setRemainingTime] = useState(null);
 
-  useEffect(() => {
-    const storedTime = localStorage.getItem("remainingTime");
-    setRemainingTime(storedTime);
-  }, []);
+  // useEffect(() => {
+  //   const storedTime = localStorage.getItem("remainingTime");
+  //   setRemainingTime(storedTime);
+  // }, []);
 
   const openPaymentConfirmModal = async (id) => {
-    console.log('remainingTime', remainingTime);
+    // console.log("remainingTime", remainingTime);
 
     try {
       const response = await axios.get(`/api/session?id=${id}`);
@@ -33,7 +34,9 @@ const PaymentConfirmModal = () => {
           <div class="w-full p-0 rounded-2xl z-50 h-full justify-between flex flex-col py-2">
             <div class="flex w-full flex-col justify-start items-start mb-4 gap-4">
               <img src="/img/logoLogin.png" class="w-[90px] h-[25px] mr-2" alt="logo" />
-              <p class="text-[15px] text-black text-start">Anda akan membeli layanan OWDI. Tarif ${formatRupiah(sessionData.price || 0)}</p>
+              <p class="text-[15px] text-black text-start">Anda akan membeli layanan OWDI. Tarif ${formatRupiah(
+                sessionData.price || 0
+              )}</p>
               <div class="bg-[#4F607780] p-4 w-full rounded-2xl flex flex-col items-start justify-start gap-3">
                 <div class="flex flex-col gap-4 w-full">
                   <p class="text-black font-bold text-[15px] text-start">1. Masukan Nomor Ponsel</p>
@@ -72,8 +75,6 @@ const PaymentConfirmModal = () => {
           popup: "bg-white w-[328px] h-[600px] rounded-3xl shadow-lg",
         },
         didOpen: () => {
-
-
           document.getElementById("myButton").addEventListener("click", () => {
             const time = sessionData.time;
             console.log("Original time:", time);
@@ -81,13 +82,45 @@ const PaymentConfirmModal = () => {
             const { minutes, seconds } = parseTime(time);
 
             const remainingTime = localStorage.getItem("remainingTime");
-            const remaining = remainingTime ? parseTime(remainingTime) : { minutes: 0, seconds: 0 };
-            const totalSeconds = remaining.minutes * 60 + remaining.seconds + minutes * 60 + seconds;
 
-            const newTime = formatTimeToMMSS(totalSeconds);
+            const time1 = localStorage.getItem("remainingTime");
+            const time2 = sessionData.val_time;
 
-            localStorage.setItem("remainingTime", newTime);
-            console.log("New remaining time:", newTime);
+            // Split time strings into hours and minutes
+            const [hours1, minutes1] = time1.split(":").map(Number);
+            const [hours2, minutes2] = time2.split(":").map(Number);
+
+            // Convert to total minutes
+            const totalMinutes1 = hours1 * 60 + minutes1;
+            const totalMinutes2 = hours2 * 60 + minutes2;
+
+            // Sum up the total minutes
+            const totalMinutes = totalMinutes1 + totalMinutes2;
+
+            // Calculate the new hours and minutes
+            const resultHours = Math.floor(totalMinutes / 60);
+            const resultMinutes = totalMinutes % 60;
+
+            // Format the result with leading zeros if needed
+            const result = `${String(resultHours).padStart(2, "0")}:${String(
+              resultMinutes
+            ).padStart(2, "0")}`;
+
+            // const remaining = remainingTime
+            //   ? parseTime(remainingTime)
+            //   : { minutes: 0, seconds: 0 };
+
+            // const totalSeconds =
+            //   remaining.minutes * 60 +
+            //   remaining.seconds +
+            //   minutes * 60 +
+            //   seconds;
+
+            console.log("New remaining time:", result);
+            // const newTime = formatTimeToMMSS(totalSeconds);
+
+            localStorage.setItem("remainingTime", result);
+            // console.log("New remaining time:", newTime);
 
             Swal.fire({
               title: "Success",
@@ -97,12 +130,9 @@ const PaymentConfirmModal = () => {
               showConfirmButton: false,
             }).then(() => {
               Swal.close();
-
             });
-
           });
         },
-
       });
     } catch (error) {
       console.error("Error fetching session data:", error);

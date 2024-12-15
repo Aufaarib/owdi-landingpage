@@ -117,6 +117,7 @@ const Bicara = () => {
       <div className="flex justify-center items-center bg-white">
         <div className="w-full h-[700px]">
           <iframe
+            // onClick={() => }
             src="https://avatara-star-livestream.vercel.app/embed?aspect-ratio=9:16"
             allow="microphone"
             title="Embedded content"

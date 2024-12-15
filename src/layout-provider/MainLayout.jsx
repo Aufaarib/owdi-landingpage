@@ -21,19 +21,17 @@ const MainLayout = ({ children }) => {
         alt="Background Motive"
       />
 
-      <div
-        style={{
-          zIndex: 9,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        {/* Sidebar */}
-        <MainSidebar
-          openSidebar={openSidebar}
-          setOpenSidebar={setOpenSidebar}
-        />
+      {/* Sidebar */}
+      <MainSidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
 
+      <div
+        className={`${openSidebar && "opacity-50 hidden"}`}
+        // style={{
+        //   zIndex: 9,
+        //   display: "flex",
+        //   flexDirection: "column",
+        // }}
+      >
         {/* Header */}
         <MainHeader openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
 

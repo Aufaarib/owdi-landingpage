@@ -59,7 +59,7 @@ const LoginModal = () => {
           nomor = "0" + nomor;
 
           // Dummy data untuk login
-          const dummyUsername = "admin";
+          const dummyUsername = "userowdi";
           const dummyNomor = "08123456789";
 
           if (username && nomor) {

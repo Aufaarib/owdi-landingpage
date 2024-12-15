@@ -26,11 +26,11 @@ const MainLayout = ({ children }) => {
 
       <div
         className={`${openSidebar && "opacity-50 hidden"}`}
-        // style={{
-        //   zIndex: 9,
-        //   display: "flex",
-        //   flexDirection: "column",
-        // }}
+        style={{
+          zIndex: 9,
+          // display: "flex",
+          // flexDirection: "column",
+        }}
       >
         {/* Header */}
         <MainHeader openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />

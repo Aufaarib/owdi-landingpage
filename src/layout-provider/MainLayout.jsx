@@ -10,8 +10,9 @@ const MainLayout = ({ children }) => {
     <div className="relative bg-gradient-to-r from-[#EF2328] to-[#FB942B] flex flex-col min-h-screen justify-between">
       {/* Gambar latar belakang */}
       <Image
+        className="md:ml-16"
         style={{
-          marginLeft: "60px",
+          // marginLeft: "60px",
           height: "100%",
           position: "absolute",
         }}

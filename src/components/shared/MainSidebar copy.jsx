@@ -1,55 +1,180 @@
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState } from "react";
+import Link from "next/link";
+import { IconArticle, IconChevronRight, IconPlus } from "@tabler/icons-react";
+import Image from "next/image";
+import TopupModal from "../Modal/TopupModal";
+import PaymentConfirmModal from "../Modal/PaymentConfirmModal";
+import { useRouter } from "next/navigation";
+import formatRupiah from "@/utils/formatRupiah";
 
 const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
+    const { openTopupModal } = TopupModal();
+    const { openPaymentConfirmModal } = PaymentConfirmModal();
+    const router = useRouter();
+
+    const sessionData = [
+        {
+            time: "3 Menit",
+            price: 5000,
+            label: "Paling Banyak Dibeli",
+            labelGradient: "from-[#001A41] to-[#0E336C]",
+            promo: false,
+        },
+        {
+            time: "5 Menit",
+            price: 10000,
+            promo: false,
+        },
+        {
+            time: "5 Menit",
+            price: 10000,
+            promo: false,
+        },
+        {
+            time: "5 Menit",
+            price: 10000,
+            promo: false,
+        },
+        {
+            time: "5 Menit",
+            price: 10000,
+            promo: false,
+        },
+        {
+            time: "5 Menit",
+            price: 10000,
+            promo: false,
+        },
+        {
+            time: "5 Menit",
+            price: 10000,
+            promo: false,
+        },
+        {
+            time: "5 Menit",
+            price: 10000,
+            promo: false,
+        },
+        {
+            time: "20 Menit",
+            price: 18000,
+            oldPrice: 20500,
+            label: "Promo",
+            labelGradient: "from-[#EF2328] to-[#FB942B]",
+            promo: true,
+        },
+    ];
+
     return (
-        <div className="flex h-screen">
-            {/* Sidebar */}
-            <div
-                className={`bg-gray-800 text-white w-64 p-5 space-y-6 ${openSidebar ? 'block' : 'hidden'} lg:block`}
-            >
-                <div className="text-center text-xl font-semibold">
-                    <h1>Logo</h1>
+        <div
+            className={`absolute flex flex-col h-full bg-white w-[312px] z-10 ${openSidebar ? "block" : "hidden"
+                }`}
+        >
+            {/* Header Section */}
+            <div className="bg-[#ebdcd3]">
+                <div className="flex mt-4 gap-2 items-center h-[32px] w-full">
+                    <Image
+                        src="/icons/menuSidebar.png"
+                        onClick={() => setOpenSidebar(!openSidebar)}
+                        alt="Menu"
+                        className="w-6 h-6 ml-5 cursor-pointer"
+                        width={24}
+                        height={24}
+                    />
+                    <Image
+                        src="/icons/logoSidebar.png"
+                        alt="Logo"
+                        className="w-[90px] h-6 ml-[22px] object-cover"
+                        width={200}
+                        height={200}
+                    />
+                    <button
+                        onClick={openTopupModal}
+                        className="flex justify-center items-center ml-2 bg-gradient-to-r from-transparent to-[#001A41BF] text-white text-[14px] px-1 py-2"
+                    >
+                        <p className="whitespace-nowrap">Tersisa: 10 Menit</p>
+                        <IconPlus size={14} className="ml-2" />
+                    </button>
                 </div>
 
-                <nav>
-                    <ul className="space-y-4">
-                        <li>
-                            <Link href={"/dashboard"} className="block px-4 py-2 rounded hover:bg-gray-700">Dashboard</Link>
-                        </li>
-                        <li>
-                            <Link href={"/profile"} className="block px-4 py-2 rounded hover:bg-gray-700">Profile</Link>
-                        </li>
-                        <li>
-                            <Link href={"/settings"} className="block px-4 py-2 rounded hover:bg-gray-700">Settings</Link>
-                        </li>
-                        <li>
-                            <Link href={"/logout"} className="block px-4 py-2 rounded hover:bg-gray-700">Logout</Link>
-                        </li>
-                    </ul>
-                </nav>
-
-                {/* Close Sidebar Button (Mobile) */}
-                <button
-                    className="lg:hidden p-2 bg-gray-600 text-white mt-4"
-                    onClick={() => setOpenSidebar(false)}
-                >
-                    Close Sidebar
-                </button>
+                <div className="flex flex-col px-4">
+                    <p className="font-semibold text-xs mt-4">Own Digital Companion</p>
+                    <p className="text-xs">
+                        Your digital friend who is always ready to help you with your daily
+                        activities, making life simpler and more fun!
+                    </p>
+                    <button
+                        onClick={() => {
+                            setOpenSidebar(false);
+                            router.push("/bicara");
+                        }}
+                        className="relative flex justify-between items-center gap-2 my-4 bg-gradient-to-r from-[#EF2328] to-[#FB942B] px-4 py-5 rounded-xl text-white"
+                    >
+                        <p>Mulai Sesi Obrolan</p>
+                        <Image
+                            src="/img/union.png"
+                            alt="Union"
+                            width={58}
+                            height={48}
+                            className="absolute right-5 w-[57px] h-[48px]"
+                        />
+                    </button>
+                </div>
             </div>
 
-            {/* Toggle Button (Mobile) */}
-            <button
-                className="lg:hidden p-2 bg-gray-600 text-white"
-                onClick={() => setOpenSidebar(!openSidebar)}
-            >
-                Toggle Sidebar
-            </button>
+            {/* Session Data Section */}
+            <div className="bg-white">
+                <div className="flex flex-col px-4">
+                    <p className="font-semibold text-md mt-4">Top Up Sesi Waktu</p>
+                    <div className="h-[420px] overflow-y-auto no-scrollbar mt-2">
+                        {sessionData.map((session, index) => (
+                            <button
+                                onClick={openPaymentConfirmModal}
+                                key={index}
+                                className="inset-0 w-full rounded-xl bg-gradient-to-r from-[#EF2328] to-[#FB942B] p-[1px] my-2"
+                            >
+                                <div className="relative flex items-center bg-[#f2dbd5] rounded-xl h-full px-4 py-5">
+                                    {/* Rata Kiri */}
+                                    <div className="w-[120px] text-xs font-semibold text-left">
+                                        <p>{session.time}</p>
+                                        {session.label && (
+                                            <div
+                                                className={`absolute top-0 text-[10px] text-white bg-gradient-to-r ${session.labelGradient} px-2 py-1 rounded-b-xl`}
+                                            >
+                                                <p>{session.label}</p>
+                                            </div>
+                                        )}
+                                    </div>
 
-            {/* Main Content */}
-            <div className="flex-1 p-6">
-                <h1 className="text-2xl font-semibold">Welcome to the Dashboard!</h1>
-                <p className="mt-4">Here is your main content.</p>
+                                    {/* Rata Tengah */}
+                                    <div className="flex justify-center items-center flex-1">
+                                        {session.promo && (
+                                            <Image
+                                                src="/icons/promo.png"
+                                                alt="Promo Icon"
+                                                width={24}
+                                                height={24}
+                                                className="mb-1 w-6 h-6"
+                                            />
+                                        )}
+                                        <div className="text-center">
+                                            <p className="m-0 text-xs">{formatRupiah(session.price)}</p>
+                                            {session.oldPrice && (
+                                                <span className="text-[10px] line-through text-[#9CA9B9]">
+                                                    {formatRupiah(session.oldPrice)}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Rata Kanan */}
+                                    <IconChevronRight size={24} className="ml-auto" />
+                                </div>
+
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );

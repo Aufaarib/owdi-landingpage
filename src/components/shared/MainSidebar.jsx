@@ -1,74 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IconArticle, IconChevronRight, IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
 import TopupModal from "../Modal/TopupModal";
 import PaymentConfirmModal from "../Modal/PaymentConfirmModal";
 import { useRouter } from "next/navigation";
+import formatRupiah from "@/utils/formatRupiah";
+import axios from "axios";
 
 const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const { openTopupModal } = TopupModal();
   const { openPaymentConfirmModal } = PaymentConfirmModal();
   const router = useRouter();
 
-  const sessionData = [
-    {
-      time: "3 Menit",
-      price: "Rp5.000",
-      label: "Paling Banyak Dibeli",
-      labelGradient: "from-[#001A41] to-[#0E336C]",
-      promo: false,
-    },
-    {
-      time: "5 Menit",
-      price: "Rp10.000",
-      promo: false,
-    },
-    {
-      time: "5 Menit",
-      price: "Rp10.000",
-      promo: false,
-    },
-    {
-      time: "5 Menit",
-      price: "Rp10.000",
-      promo: false,
-    },
-    {
-      time: "5 Menit",
-      price: "Rp10.000",
-      promo: false,
-    },
-    {
-      time: "5 Menit",
-      price: "Rp10.000",
-      promo: false,
-    },
-    {
-      time: "5 Menit",
-      price: "Rp10.000",
-      promo: false,
-    },
-    {
-      time: "5 Menit",
-      price: "Rp10.000",
-      promo: false,
-    },
-    {
-      time: "20 Menit",
-      price: "Rp18.000",
-      oldPrice: "Rp20.500",
-      label: "Promo",
-      labelGradient: "from-[#EF2328] to-[#FB942B]",
-      promo: true,
-    },
-  ];
+  const [sessionData, setSessionData] = useState([]);
+  useEffect(() => {
+    axios.get('/api/session')  // Mengakses endpoint API
+      .then(response => {
+        setSessionData(response.data);  // Menyimpan data ke dalam state
+      })
+      .catch(error => {
+        console.error("Error fetching session data:", error);  // Menangani error
+      });
+  }, []);
 
   return (
     <div
-      className={`absolute flex flex-col h-full bg-white w-[312px] z-10 ${
-        openSidebar ? "block" : "hidden"
-      }`}
+      className={`absolute flex flex-col h-full bg-white w-[312px] z-10 ${openSidebar ? "block" : "hidden"
+        }`}
     >
       {/* Header Section */}
       <div className="bg-[#ebdcd3]">
@@ -129,45 +88,46 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
           <div className="h-[420px] overflow-y-auto no-scrollbar mt-2">
             {sessionData.map((session, index) => (
               <button
-                onClick={openPaymentConfirmModal}
-                key={index}
+                onClick={() => openPaymentConfirmModal(session.id)}  // Kirim session.id
+                key={session.id}  // Gunakan session.id sebagai key
                 className="inset-0 w-full rounded-xl bg-gradient-to-r from-[#EF2328] to-[#FB942B] p-[1px] my-2"
               >
-                <div className="relative flex justify-beteen items-center bg-[#f2dbd5] rounded-xl h-full px-4 py-5">
-                  <p className="w-[120px] text-xs font-semibold">
-                    {session.time}
-                  </p>
-                  {session.label && (
-                    <div
-                      className={`absolute top-0 text-[10px] text-white bg-gradient-to-r ${session.labelGradient} px-2 py-1 rounded-b-xl`}
-                    >
-                      <p>{session.label}</p>
-                    </div>
-                  )}
+                <div className="relative flex items-center bg-[#f2dbd5] rounded-xl h-full px-4 py-5">
+                  {/* Rata Kiri */}
+                  <div className="w-[120px] text-xs font-semibold text-left">
+                    <p>{session.time}</p>
+                    {session.label && (
+                      <div
+                        className={`absolute top-0 text-[10px] text-white bg-gradient-to-r ${session.labelGradient} px-2 py-1 rounded-b-xl`}
+                      >
+                        <p>{session.label}</p>
+                      </div>
+                    )}
+                  </div>
 
-                  <div className="flex items-center">
+                  {/* Rata Tengah */}
+                  <div className="flex justify-center items-center flex-1">
                     {session.promo && (
                       <Image
                         src="/icons/promo.png"
                         alt="Promo Icon"
                         width={24}
                         height={24}
+                        className="mb-1 w-6 h-6"
                       />
                     )}
-                    <div
-                      className={`ml-${session.promo ? 2 : 0} mr-${
-                        session.promo ? 2 : 11
-                      }`}
-                    >
-                      <p className="m-0 text-xs">{session.price}</p>
+                    <div className="text-center">
+                      <p className="m-0 text-xs">{formatRupiah(session.price)}</p>
                       {session.oldPrice && (
                         <span className="text-[10px] line-through text-[#9CA9B9]">
-                          {session.oldPrice}
+                          {formatRupiah(session.oldPrice)}
                         </span>
                       )}
                     </div>
-                    <IconChevronRight size={24} />
                   </div>
+
+                  {/* Rata Kanan */}
+                  <IconChevronRight size={24} className="ml-auto" />
                 </div>
               </button>
             ))}

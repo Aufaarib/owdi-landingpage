@@ -1,10 +1,8 @@
-import Image from "next/image";
+import LoginModal from "@/components/Modal/LoginModal";
+import PaymentConfirmModal from "@/components/Modal/PaymentConfirmModal";
+import TopupModal from "@/components/Modal/TopupModal";
 import { IconArrowLeft, IconMicrophone } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
-import LoginModal from "@/components/Modal/LoginModal";
-import Swal from "sweetalert2";
-import TopupModal from "@/components/Modal/TopupModal";
-import PaymentConfirmModal from "@/components/Modal/PaymentConfirmModal";
 
 const ButtonCategory = ({ setIsOpenCategory }) => {
   return (
@@ -20,7 +18,7 @@ const ButtonCategory = ({ setIsOpenCategory }) => {
         justifyContent: "center",
         gap: "10px",
         textAlign: "center",
-        borderRadius: "16px",
+        borderRadius: "10px",
         // marginBottom: "40px",
       }}
     >
@@ -115,21 +113,23 @@ const CategoryCard = () => {
   );
 };
 
-const PickedCategoriesSection = ({ setIsOpenCategory }) => {
+const PickedCategoriesSection = ({ setIsOpenCategory, openLoginModal }) => {
   return (
     <div
-      className="px-3"
+      className="px-3 md:px-44"
       style={{
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
         justifyContent: "center",
+        width: "100%",
         height: "100%",
-        // position: "relative",
       }}
     >
       <div
         style={{
           display: "flex",
+          justifyContent: "center",
           flexDirection: "column",
           backgroundColor: "#faf1ec",
           minHeight: "100%",
@@ -160,11 +160,58 @@ const PickedCategoriesSection = ({ setIsOpenCategory }) => {
             }}
           >
             <IconArrowLeft />
-            <p style={{ marginBottom: "3px" }}>Kembali</p>
+            <p className="md:hidden" style={{ marginBottom: "3px" }}>
+              Kembali
+            </p>
           </button>
-          <button
+          <div
+            className="md:flex flex-col md:flex-row h-[124px] md:h-auto w-full px-2 hidden sm:block"
             style={{
-              display: "flex",
+              backgroundColor: "white",
+              alignItems: "center",
+              justifyContent: "space-between",
+              // height: "124px",
+              // width: "328px",
+              gap: "15px",
+              borderRadius: "18px",
+            }}
+          >
+            <input
+              placeholder="Kamu mau cerita apa sama Owdi?"
+              className="h-[32px] md:h-[50px] p-[8px] w-[275px] md:w-full"
+              style={{
+                borderRadius: "8px",
+                // padding: "1px 8px",
+                // width: "275px",
+                border: "none",
+                background: "#001A410D",
+                outline: "none",
+              }}
+            />
+            <button
+              onClick={openLoginModal}
+              style={{
+                borderRadius: "100px",
+                border: "none",
+                outline: "none",
+                color: "white",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "296px",
+                height: "40px",
+                display: "flex",
+                background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
+                gap: "10px",
+              }}
+            >
+              Mulai Bicara
+              <IconMicrophone />
+            </button>
+          </div>
+          <button
+            className="flex md:hidden"
+            style={{
+              // display: "flex",
               background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
               padding: "8px",
               borderRadius: "100px",
@@ -180,7 +227,7 @@ const PickedCategoriesSection = ({ setIsOpenCategory }) => {
           <CategoryCard />
         </div>
       </div>
-      <div className="flex flex-row bg-[#FFBCA7] py-4 px-2 gap-3">
+      <div className="flex flex-row w-full bg-[#FFBCA7] py-4 px-2 gap-3">
         <p>Pilih topik lain</p>
         <div className="flex-row gap-2 w-[70%] max-w-full flex overflow-x-auto no-scrollbar">
           <ButtonCategory setIsOpenCategory={setIsOpenCategory} />
@@ -217,40 +264,39 @@ export default function Home() {
         height: "100%",
       }}
     >
-      <div>
+      <div className="flex flex-col w-full justify-center items-center">
         {/* image frame */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <div className="flex justify-center md:flex-row md:items-center">
           <img
-            className={isOpenCategory && "hidden"}
             style={{
               width: "288px",
               position: "absolute",
               marginTop: "40px",
             }}
+            className={`md:hidden ${isOpenCategory && "hidden"}`}
             src={`/img/Talk (1).png`}
             alt="err"
           />
           <img
-            style={
-              !isOpenCategory
-                ? {
-                    width: "330px",
-                    marginRight: "20px",
-                    marginTop: "140px",
-                  }
-                : { width: "330px" }
-            }
+            className={`w-[330px] md:mr-[20px] md:mt-[60px] ${
+              !isOpenCategory && "mr-[20px] mt-[140px]"
+            }`}
             src={`/img/Models.png`}
             alt="err"
           />
+          {/* desktop bubble */}
+          <img
+            className="hidden sm:block h-36 mb-16"
+            src="/img/Talk (2).png"
+            alt="err"
+          />
         </div>
+
         {isOpenCategory ? (
-          <PickedCategoriesSection setIsOpenCategory={setIsOpenCategory} />
+          <PickedCategoriesSection
+            openLoginModal={openLoginModal}
+            setIsOpenCategory={setIsOpenCategory}
+          />
         ) : (
           <div
             style={{
@@ -260,28 +306,27 @@ export default function Home() {
             }}
           >
             <div
+              className="flex flex-col md:flex-row w-fit px-4 h-[124px] md:h-auto"
               style={{
-                display: "flex",
-                flexDirection: "column",
                 backgroundColor: "white",
                 alignItems: "center",
                 justifyContent: "center",
-                height: "124px",
-                width: "328px",
+                // height: "124px",
+                // width: "328px",
                 gap: "15px",
-                borderRadius: "24px",
+                borderRadius: "18px",
               }}
             >
               <input
                 placeholder="Kamu mau cerita apa sama Owdi?"
+                className="h-[32px] md:h-[50px] md:my-2 p-[8px] w-[275px] md:w-[744px]"
                 style={{
                   borderRadius: "8px",
-                  padding: "1px 8px",
-                  width: "275px",
+                  // padding: "1px 8px",
+                  // width: "275px",
                   border: "none",
                   background: "#001A410D",
                   outline: "none",
-                  height: "32px",
                 }}
               />
               <button
@@ -313,11 +358,12 @@ export default function Home() {
       {!isOpenCategory && (
         <>
           <div
+            className="py-[24px] px-[14px] md:px-[280px]"
             style={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              padding: "14px 24px",
+              // padding: "14px 24px",
               background: "#FFFFFF1A",
               gap: "10px",
             }}
@@ -325,20 +371,40 @@ export default function Home() {
             <p style={{ margin: 0, color: "white" }}>
               Mau Owdi ceritakan topik dibawah ini?
             </p>
-            <ButtonCategory setIsOpenCategory={setIsOpenCategory} />
+            <div className="flex flex-row gap-6 overflow-auto no-scrollbar">
+              {[...Array(20)].map(() => (
+                <ButtonCategory setIsOpenCategory={setIsOpenCategory} />
+              ))}
+            </div>
           </div>
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: "12px",
-              color: "white",
-              marginBottom: "5px",
-            }}
-          >
-            Copyright © 2024 OWDI. All rights reserved.
-          </p>
         </>
       )}
+
+      <div
+        className={`flex flex-row w-full items-center gap-6 md:px-[280px] py-6 mt-[8%] ${
+          isOpenCategory && "hidden"
+        }`}
+      >
+        <div className="md:flex flex-col gap-2 hidden">
+          <img className={`w-[100px]`} src={`/img/owdi-white.png`} alt="err" />
+          <p className="text-white font-bold">Own Digital Company</p>
+          <p className="text-white opacity-85 w-[400px]">
+            Your digital friend who is always ready to help you with your daily
+            activities, making life simpler and more fun!
+          </p>
+        </div>
+        <p
+          className="opacity-85 md:px-28 justify-center flex w-full"
+          style={{
+            textAlign: "center",
+            fontSize: "14px",
+            color: "white",
+            marginBottom: "5px",
+          }}
+        >
+          Copyright © 2024 OWDI. All rights reserved.
+        </p>
+      </div>
     </div>
   );
 }

@@ -2,16 +2,23 @@ import MainFooter from "@/components/shared/MainFooter";
 import MainHeader from "@/components/shared/MainHeader";
 import MainSidebar from "@/components/shared/MainSidebar"; // Pastikan Sidebar sudah ada di komponen ini
 import Image from "next/image";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
 const MainLayout = ({ children }) => {
   const [openSidebar, setOpenSidebar] = useState(false);
 
+  const router = useRouter();
+
   return (
-    <div className="relative bg-gradient-to-r from-[#EF2328] to-[#FB942B] flex flex-col min-h-screen justify-between max-w-screen m-auto">
+    <div
+      className={`relative bg-gradient-to-r from-[#EF2328] to-[#FB942B] flex flex-col min-h-screen justify-between max-w-screen m-auto`}
+    >
       {/* Gambar latar belakang */}
       <Image
-        className="h-full absolute md:right-0 md:w-1/2 object-cover"
+        className={`h-full absolute md:right-0 md:w-1/2 object-cover ${
+          openSidebar && "hidden"
+        }`}
         width={400}
         height={400}
         src="/img/image 1.png"
@@ -22,7 +29,7 @@ const MainLayout = ({ children }) => {
       <MainSidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
 
       <div
-        className={`${openSidebar && "opacity-50 hidden"}`}
+        className={`${openSidebar && "opacity-5 hidden"}`}
         style={{
           zIndex: 9,
           // display: "flex",
@@ -34,7 +41,7 @@ const MainLayout = ({ children }) => {
 
         {/* Konten utama */}
         <div className="flex-1">{children}</div>
-        <MainFooter />
+        {router.pathname !== "/" && <MainFooter />}
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
 
   return (
     <div
-      className={`flex justify-between items-center p-4 ${
+      className={`flex justify-between items-center p-4 md:px-14 ${
         username ? "bg-transparent" : "bg-[#FFFFFFBF] bg-opacity-75"
       }`}
     >
@@ -61,6 +61,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
             height={14}
           />
         )}
+
         <Image
           src={username ? "/img/logo.png" : "/img/logoLogin.png"}
           alt="logo"
@@ -70,15 +71,28 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
         />
       </div>
 
+      <Image
+        src={"/img/Own Digital Companion.png"}
+        alt="logo"
+        className="object-cover hidden sm:block"
+        width={250}
+        height={35}
+      />
+
       {username ? (
         <button
           onClick={() => openTopupModal()}
-          className="flex items-center justify-center bg-[#001A41] text-white px-3 py-1 rounded-full"
+          className="flex items-center gap-2 justify-center bg-[#001A41] text-white px-7 py-1 rounded-full"
         >
-          <p className="font-semibold text-[14px] mr-2">
-            {remainingTime !== "00:00"
-              ? `Tersisa: ${remainingTime} Menit`
-              : "Waktu Habis"}
+          <Image
+            src={"/icons/icon-coin.png"}
+            alt="logo"
+            className="object-cover sm:block"
+            width={30}
+            height={30}
+          />
+          <p className="font-semibold text-[18px] mb-0.5">
+            {remainingTime !== "00:00" ? `1 Koin` : "0 Koin"}
           </p>
           <IconPlus size={24} />
         </button>
@@ -87,9 +101,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
           onClick={handleLogin}
           className="flex items-center justify-center bg-white w-[133px] h-[32px] rounded-full"
         >
-          <p className="text-[#FF0025] font-semibold text-[14px]">
-            Coba Gratis
-          </p>
+          <p className="text-[#FF0025] font-bold text-[14px]">Coba Gratis</p>
         </button>
       )}
     </div>

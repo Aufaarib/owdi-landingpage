@@ -51,6 +51,7 @@ const HomePage = () => {
       setUsername(storedUsername);
     }
   };
+
   useEffect(() => {
     getUsername();
 

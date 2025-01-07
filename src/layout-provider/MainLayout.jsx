@@ -14,17 +14,6 @@ const MainLayout = ({ children }) => {
     <div
       className={`relative bg-gradient-to-r from-[#EF2328] to-[#FB942B] flex flex-col min-h-screen justify-between max-w-screen m-auto`}
     >
-      {/* Gambar latar belakang */}
-      <Image
-        className={`h-full absolute md:right-0 md:w-1/2 object-cover ${
-          openSidebar && "hidden"
-        }`}
-        width={400}
-        height={400}
-        src="/img/image 1.png"
-        alt="Background Motive"
-      />
-
       {/* Sidebar */}
       <MainSidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
 
@@ -41,7 +30,7 @@ const MainLayout = ({ children }) => {
 
         {/* Konten utama */}
         <div className="flex-1">{children}</div>
-        {router.pathname !== "/" && <MainFooter />}
+        {router.pathname == "/" && <MainFooter />}
       </div>
     </div>
   );

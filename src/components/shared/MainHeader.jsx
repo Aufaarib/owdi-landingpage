@@ -4,12 +4,17 @@ import { useEffect, useState } from "react";
 import LoginModal from "../Modal/LoginModal";
 import moment from "moment";
 import TopupModal from "../Modal/TopupModal";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 const MainHeader = ({ openSidebar, setOpenSidebar }) => {
+  const params = useRouter();
   const [username, setUsername] = useState("");
   const [remainingTime, setRemainingTime] = useState("");
   const { openLoginModal } = LoginModal();
   const { openTopupModal } = TopupModal();
+
+  const isHomePage = (params.pathname = "/home");
 
   const handleLogin = async () => {
     await openLoginModal();
@@ -42,30 +47,40 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [remainingTime]);
+  }, [username, remainingTime]);
 
   return (
     <div
       className={`flex justify-between items-center p-4 md:px-14 ${
-        username ? "bg-transparent" : "bg-[#FFFFFFBF] bg-opacity-75"
+        username
+          ? "bg-transparent md:bg-[#FFFFFFBF] bg-opacity-75"
+          : "bg-[#FFFFFFBF] bg-opacity-75"
       }`}
     >
       <div className="flex items-center gap-4">
-        {username && (
+        {username && isHomePage && (
           <Image
             onClick={() => setOpenSidebar(!openSidebar)}
-            src="/icons/toglePay.png"
+            src="/icons/hamburger.png"
             alt="logo"
-            className="object-cover cursor-pointer"
+            className="object-cover cursor-pointer md:hidden"
             width={20}
             height={14}
           />
         )}
 
         <Image
-          src={username ? "/img/logo.png" : "/img/logoLogin.png"}
+          src={username ? "/img/owdi-white.png" : "/img/owdi-colors 1.png"}
           alt="logo"
-          className="object-cover"
+          className="object-cover md:hidden"
+          width={90}
+          height={25}
+        />
+
+        <Image
+          src={"/img/owdi-colors 1.png"}
+          alt="logo"
+          className="object-cover hidden sm:block"
           width={90}
           height={25}
         />
@@ -88,8 +103,8 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
             src={"/icons/icon-coin.png"}
             alt="logo"
             className="object-cover sm:block"
-            width={30}
-            height={30}
+            width={20}
+            height={20}
           />
           <p className="font-semibold text-[18px] mb-0.5">
             {remainingTime !== "00:00" ? `1 Koin` : "0 Koin"}

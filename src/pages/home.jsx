@@ -1,11 +1,23 @@
 import LoginModal from "@/components/Modal/LoginModal";
 import { IconVolume } from "@tabler/icons-react";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const HomePage = () => {
   const router = useRouter();
+  const [username, setUsername] = useState("");
+  const { openLoginModal } = LoginModal();
+
+  useEffect(() => {
+    console.log(localStorage.getItem("username"));
+    if (localStorage.getItem("username")) {
+      Cookies.set("username", localStorage.getItem("username"));
+      router.push("/choose-character");
+    }
+  }, []);
+
   const menuItems = [
     {
       label: "Semua Topik",
@@ -32,8 +44,6 @@ const HomePage = () => {
       textColor: "text-black",
     },
   ];
-  const [username, setUsername] = useState("");
-  const { openLoginModal } = LoginModal();
 
   const handleSession = async () => {
     // Tunggu modal login selesai

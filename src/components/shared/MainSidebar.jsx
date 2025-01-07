@@ -4,9 +4,10 @@ import { IconArticle, IconChevronRight, IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
 import TopupModal from "../Modal/TopupModal";
 import PaymentConfirmModal from "../Modal/PaymentConfirmModal";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import formatRupiah from "@/utils/formatRupiah";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
@@ -34,6 +35,13 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
 
     return () => clearInterval(interval);
   }, [remainingTime]);
+
+  const onLogout = () => {
+    localStorage.clear();
+    Cookies.remove("username");
+    setOpenSidebar(!openSidebar);
+    router.reload();
+  };
 
   return (
     <div
@@ -222,26 +230,28 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
                 />
               </svg>
 
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9.75473 12.0002C9.75473 11.3789 10.2584 10.8752 10.8797 10.8752L17.625 10.8752L15.0455 8.29547C14.6061 7.85612 14.6062 7.14381 15.0455 6.70448C15.4849 6.26515 16.1972 6.26517 16.6365 6.70453L20.341 10.4093C21.2197 11.288 21.2197 12.7126 20.341 13.5912L16.6365 17.2957C16.1971 17.735 15.4848 17.735 15.0455 17.2957C14.6061 16.8563 14.6062 16.144 15.0455 15.7047L17.625 13.1252H10.8797C10.2584 13.1252 9.75473 12.6215 9.75473 12.0002Z"
-                  fill="#181C21"
-                />
-                <path
-                  d="M12 4.125C12 4.74632 11.4963 5.25 10.875 5.25L6.375 5.25C5.75368 5.25 5.25 5.75368 5.25 6.375L5.25 17.5C4.63872 17.3306 4.01866 17.0393 3.48386 16.665C3.30337 16.5386 3.14229 16.4101 3 16.2814V6.375C3 4.51104 4.51104 3 6.375 3H10.875C11.4963 3 12 3.50368 12 4.125Z"
-                  fill="#181C21"
-                />
-                <path
-                  d="M3.00252 17.7567C3.07171 19.5596 4.55515 21 6.375 21H10.875C11.4963 21 12 20.4963 12 19.875C12 19.2537 11.4963 18.75 10.875 18.75H6.375L6.37136 18.75C5.22995 18.7492 4.01579 18.353 3.00252 17.7567Z"
-                  fill="#181C21"
-                />
-              </svg>
+              <p className="cursor-pointer" onClick={() => onLogout()}>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9.75473 12.0002C9.75473 11.3789 10.2584 10.8752 10.8797 10.8752L17.625 10.8752L15.0455 8.29547C14.6061 7.85612 14.6062 7.14381 15.0455 6.70448C15.4849 6.26515 16.1972 6.26517 16.6365 6.70453L20.341 10.4093C21.2197 11.288 21.2197 12.7126 20.341 13.5912L16.6365 17.2957C16.1971 17.735 15.4848 17.735 15.0455 17.2957C14.6061 16.8563 14.6062 16.144 15.0455 15.7047L17.625 13.1252H10.8797C10.2584 13.1252 9.75473 12.6215 9.75473 12.0002Z"
+                    fill="#181C21"
+                  />
+                  <path
+                    d="M12 4.125C12 4.74632 11.4963 5.25 10.875 5.25L6.375 5.25C5.75368 5.25 5.25 5.75368 5.25 6.375L5.25 17.5C4.63872 17.3306 4.01866 17.0393 3.48386 16.665C3.30337 16.5386 3.14229 16.4101 3 16.2814V6.375C3 4.51104 4.51104 3 6.375 3H10.875C11.4963 3 12 3.50368 12 4.125Z"
+                    fill="#181C21"
+                  />
+                  <path
+                    d="M3.00252 17.7567C3.07171 19.5596 4.55515 21 6.375 21H10.875C11.4963 21 12 20.4963 12 19.875C12 19.2537 11.4963 18.75 10.875 18.75H6.375L6.37136 18.75C5.22995 18.7492 4.01579 18.353 3.00252 17.7567Z"
+                    fill="#181C21"
+                  />
+                </svg>
+              </p>
             </div>
           </div>
 

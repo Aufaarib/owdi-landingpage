@@ -103,12 +103,11 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="relative bg-[#FFFFFFBF] p-4 h-[550px] md:mx-5 md:w-[300px] md:mt-10 md:rounded-xl md:order-first">
-        <p className="text-[14px] text-[#001A41]">
-          Mau Owdi ceritakan rekomendasi topik?
-        </p>
+      <div className="relative bg-[#FFFFFFBF] p-4 h-[550px] md:mx-5 md:w-[408px] md:mt-10 md:rounded-xl md:order-first">
+        <p className="text-[14px] text-[#001A41]">Mau Owdi ceritakan rekomendasi topik?</p>
 
-        <div className="text-[12px] mt-3 flex md:hidden space-x-2 overflow-auto no-scrollbar">
+        {/* Menu Buttons */}
+        <div className="text-[12px] my-3 flex space-x-2 overflow-auto no-scrollbar">
           {menuItems.map((item, index) => (
             <button
               key={index}
@@ -120,40 +119,41 @@ const HomePage = () => {
           ))}
         </div>
 
-        <div className="text-[12px] mt-3 flex md:flex-col md:h-[350px]  overflow-x-auto no-scrollbar">
-          {[...Array(5)].map((_, index) => (
+        {/* Content */}
+        <div className="text-[12px] flex flex-col gap-2 h-[445px] w-full overflow-y-auto no-scrollbar px-2 md:px-0">
+          {[...Array(10)].map((_, index) => (
             <div
               key={index}
-              className="w-[166px] bg-white shadow-md rounded-lg flex-shrink-0 overflow-hidden border border-gray-200 m-2"
+              className="flex flex-col md:flex-row w-full md:h-[104px] bg-white rounded-xl"
             >
-              <div className="relative w-full h-[93px]">
-                <img
+              {/* Thumbnail */}
+              <div className="relative bg-red-600 w-full h-[93px] md:w-[160px] md:h-full flex-shrink-0 rounded-t-xl md:rounded-l-xl md:rounded-tr-none">
+                <Image
                   src="/img/film/banner1.png"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-t-xl md:rounded-l-xl md:rounded-tr-none"
+                  width={100}
+                  height={100}
                   alt="Film Banner"
                 />
                 <div className="absolute bottom-2 left-2 py-[2px] px-[8px] bg-gray-500 text-white text-[10px] flex items-center rounded-full">
-                  <img
-                    src="/icons/video.png"
-                    alt="Video Icon"
-                    className="w-3 h-3 mr-1"
-                  />
+                  <img src="/icons/video.png" alt="Video Icon" className="w-3 h-3 mr-1" />
                   <span>Film</span>
                 </div>
               </div>
 
-              <div className="p-2">
-                <p className="text-[12px] text-[#001A41] line-clamp-3 overflow-hidden text-ellipsis">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Saepe labore distinctio voluptates voluptatum eos veniam
-                  autem, modi impedit deleniti quae repellendus omnis, libero
-                  excepturi, reiciendis totam nihil magni facilis cum?
+              {/* Description */}
+              <div className="p-4 md:p-2">
+                <p className="text-sm text-gray-700 line-clamp-4">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est pariatur
+                  necessitatibus saepe repellendus ut dolorem, neque natus libero recusandae
+                  ullam, eligendi quidem esse a quam? Ullam doloribus libero eaque aliquam!
                 </p>
               </div>
             </div>
           ))}
         </div>
       </div>
+
     </div>
   );
 };

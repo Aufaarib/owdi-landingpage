@@ -51,8 +51,8 @@ const ButtonCategory = ({ setIsOpenCategory }) => {
             y2="3.57498"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#EF2328" />
-            <stop offset="1" stop-color="#FB942B" />
+            <stop stopColor="#EF2328" />
+            <stop offset="1" stopColor="#FB942B" />
           </linearGradient>
           <linearGradient
             id="paint1_linear_869_71907"
@@ -62,8 +62,8 @@ const ButtonCategory = ({ setIsOpenCategory }) => {
             y2="5.08008"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#EF2328" />
-            <stop offset="1" stop-color="#FB942B" />
+            <stop stopColor="#EF2328" />
+            <stop offset="1" stopColor="#FB942B" />
           </linearGradient>
           <linearGradient
             id="paint2_linear_869_71907"
@@ -73,8 +73,8 @@ const ButtonCategory = ({ setIsOpenCategory }) => {
             y2="9.65418"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#EF2328" />
-            <stop offset="1" stop-color="#FB942B" />
+            <stop stopColor="#EF2328" />
+            <stop offset="1" stopColor="#FB942B" />
           </linearGradient>
         </defs>
       </svg>
@@ -278,9 +278,8 @@ export default function Home() {
             alt="err"
           />
           <img
-            className={`w-[330px] md:mr-[20px] md:mt-[60px] ${
-              !isOpenCategory && "mr-[20px] mt-[140px]"
-            }`}
+            className={`w-[330px] md:mr-[20px] md:mt-[60px] ${!isOpenCategory && "mr-[20px] mt-[140px]"
+              }`}
             src={`/img/Models.png`}
             alt="err"
           />
@@ -381,9 +380,8 @@ export default function Home() {
       )}
 
       <div
-        className={`flex flex-row w-full items-center gap-6 md:px-[280px] py-6 mt-[8%] ${
-          isOpenCategory && "hidden"
-        }`}
+        className={`flex flex-row w-full items-center gap-6 md:px-[280px] py-6 mt-[8%] ${isOpenCategory && "hidden"
+          }`}
       >
         <div className="md:flex flex-col gap-2 hidden">
           <img className={`w-[100px]`} src={`/img/owdi-white.png`} alt="err" />

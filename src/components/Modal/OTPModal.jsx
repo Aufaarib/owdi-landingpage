@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import FormProfileModal from "./FormProfileModal";
+import { useRouter } from "next/router";
 
 const dumyOTP = 123456;
 
@@ -8,6 +9,7 @@ const OTPModal = () => {
     const { openFormProfileModal } = FormProfileModal();
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+    const router = useRouter()
 
     const openOTPModal = (nomor) => {
         let countdown = 180; // 3 menit dalam detik
@@ -144,6 +146,10 @@ const OTPModal = () => {
                         otpGet += document.getElementById(`otp-${i}`).value;
                     }
                     if (parseInt(otpGet) === dumyOTP) {
+                        localStorage.setItem("nomor", nomor);
+                        localStorage.setItem("remainingTime", "10:00");
+                        router.push("/choose-character")
+
 
                         openFormProfileModal(nomor);
                         // Swal.fire("OTP Entered", `Your OTP is: ${otpGet}`, "success");

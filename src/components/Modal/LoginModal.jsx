@@ -2,9 +2,11 @@ import moment from "moment";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import OTPModal from "./OTPModal";
 
 const LoginModal = () => {
   const router = useRouter();
+  const { openOTPModal } = OTPModal();
 
   const openLoginModal = () => {
     Swal.fire({
@@ -61,28 +63,30 @@ const LoginModal = () => {
           // Dummy data untuk login
           const dummyUsername = "userowdi";
           const dummyNomor = "08123456789";
+          console.log("nomor", nomor);
+
 
           if (username && nomor) {
-            if (username === dummyUsername && nomor === dummyNomor) {
-              localStorage.setItem("username", username);
-              localStorage.setItem("nomor", nomor);
-              // const endTime = Date.now() + 10 * 60 * 1000;
-              localStorage.setItem("remainingTime", "10:00");
-              router.push("/home");
-              Swal.fire({
-                icon: "success",
-                title: "Login Berhasil",
-                text: `Selamat datang, ${username}!`,
-                showConfirmButton: true,
-              });
-            } else {
-              Swal.fire({
-                icon: "error",
-                title: "Login Gagal",
-                text: "Username atau nomor handphone salah.",
-                showConfirmButton: true,
-              });
-            }
+            return openOTPModal(nomor);
+            // if (username === dummyUsername && nomor === dummyNomor) {
+            //   localStorage.setItem("username", username);
+            //   localStorage.setItem("nomor", nomor);
+            //   localStorage.setItem("remainingTime", "10:00");
+            //   router.push("/home");
+            //   Swal.fire({
+            //     icon: "success",
+            //     title: "Login Berhasil",
+            //     text: `Selamat datang, ${username}!`,
+            //     showConfirmButton: true,
+            //   });
+            // } else {
+            //   Swal.fire({
+            //     icon: "error",
+            //     title: "Login Gagal",
+            //     text: "Username atau nomor handphone salah.",
+            //     showConfirmButton: true,
+            //   });
+            // }
           } else {
             Swal.fire({
               icon: "error",

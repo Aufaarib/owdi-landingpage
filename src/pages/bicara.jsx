@@ -119,6 +119,7 @@ const Bicara = () => {
           <iframe
             // onClick={() => }
             src="https://avatara-star-livestream.vercel.app/embed?aspect-ratio=9:16"
+            // src="https://demo-maz.vercel.app/embed?aspect-ratio=9:16"
             allow="microphone"
             title="Embedded content"
             allowFullScreen

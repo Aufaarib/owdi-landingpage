@@ -38,15 +38,16 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
 
   const onLogout = () => {
     localStorage.clear();
-    Cookies.remove("username");
+    Cookies.remove("nomor");
     setOpenSidebar(!openSidebar);
     router.reload();
   };
 
   return (
     <div
-      className={`flex flex-col justify-between h-screen bg-[#f2e8e5] w-[85%] z-10 backdrop-blur-2xl ${openSidebar ? "block" : "hidden"
-        }`}
+      className={`flex flex-col justify-between h-screen bg-[#f2e8e5] w-[85%] z-10 backdrop-blur-2xl ${
+        openSidebar ? "block" : "hidden"
+      }`}
     >
       <div className="h-screen flex justify-between flex-col">
         {/* Header Section */}

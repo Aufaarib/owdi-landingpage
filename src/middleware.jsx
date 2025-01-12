@@ -1,17 +1,28 @@
 import { NextResponse } from "next/server";
+import { useEffect, useState } from "react";
 
 export default function middleware(req) {
-  let verify = req.cookies.get("username")?.value;
-  const url = req.headers.get("referer");
+  const verify = req.cookies.get("nomor")?.value; // Get the "nomor" cookie value
+  const currentPath = new URL(req.url).pathname; // Extract the current path
+  // const url = new URL(req.headers.get("referer")).pathname;
 
-  const urlParts = url?.split("://")[1].split("/"); // Remove 'http://' or 'https://'
-  const pathAndQueryAndHash = "/" + urlParts?.slice(1).join("/");
+  // console.log("Cookie 'nomor' value:", verify); // Debugging the cookie
+  // console.log("Current Path:", currentPath.length); // Debugging the path
 
-  console.log("daasda", verify);
-  console.log("w", pathAndQueryAndHash);
+  // if (url == "/") {
+  //   return NextResponse.redirect(new URL("/choose-character", req.url));
+  // }
 
-  if (url == "/" && verify !== undefined) {
-    return NextResponse.redirect(new URL("/choose-character", req.url));
+  if (currentPath === "/") {
+    if (currentPath === "/" && verify) {
+      return NextResponse.redirect(new URL("/choose-character", req.url));
+    }
+  }
+  //
+  else if (currentPath === "/choose-character") {
+    if (currentPath === "/choose-character" && !verify) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
   }
 
   return NextResponse.next();

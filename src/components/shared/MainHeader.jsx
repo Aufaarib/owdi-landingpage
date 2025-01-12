@@ -22,7 +22,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
   };
 
   const getUserData = () => {
-    const storedUsername = localStorage.getItem("username");
+    const storedUsername = localStorage.getItem("nomor");
     const storedTime = localStorage.getItem("remainingTime");
 
     if (storedUsername) {

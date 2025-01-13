@@ -3,6 +3,7 @@ export default function handler(req, res) {
     {
       id: 1,
       time: "3 Menit",
+      koin: 3,
       val_time: "03:00",
       price: 5000,
       label: "Paling Banyak Dibeli",
@@ -12,6 +13,7 @@ export default function handler(req, res) {
     {
       id: 2,
       time: "5 Menit",
+      koin: 3,
       val_time: "05:00",
       price: 10000,
       promo: false,
@@ -19,6 +21,7 @@ export default function handler(req, res) {
     {
       id: 3,
       time: "10 Menit",
+      koin: 3,
       val_time: "10:00",
       price: 15000,
       oldPrice: 16500,
@@ -29,6 +32,7 @@ export default function handler(req, res) {
     {
       id: 4,
       time: "20 Menit",
+      koin: 3,
       val_time: "20:00",
       price: 18000,
       oldPrice: 20500,
@@ -39,6 +43,7 @@ export default function handler(req, res) {
     {
       id: 5,
       time: "20 Menit",
+      koin: 3,
       val_time: "20:00",
       price: 18000,
       oldPrice: 20500,
@@ -49,6 +54,7 @@ export default function handler(req, res) {
     {
       id: 6,
       time: "20 Menit",
+      koin: 3,
       val_time: "20:00",
       price: 18000,
       oldPrice: 20500,
@@ -59,6 +65,7 @@ export default function handler(req, res) {
     {
       id: 7,
       time: "20 Menit",
+      koin: 3,
       val_time: "20:00",
       price: 18000,
       oldPrice: 20500,
@@ -69,6 +76,7 @@ export default function handler(req, res) {
     {
       id: 8,
       time: "20 Menit",
+      koin: 3,
       val_time: "20:00",
       price: 18000,
       oldPrice: 20500,

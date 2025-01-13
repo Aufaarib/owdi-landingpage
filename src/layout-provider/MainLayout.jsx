@@ -1,6 +1,7 @@
 import FormProfileModal from "@/components/Modal/FormProfileModal";
 import MainFooter from "@/components/shared/MainFooter";
 import MainHeader from "@/components/shared/MainHeader";
+import MainHeaderText from "@/components/shared/MainHeaderText";
 import MainSidebar from "@/components/shared/MainSidebar"; // Pastikan Sidebar sudah ada di komponen ini
 import Cookies from "js-cookie";
 import Image from "next/image";
@@ -8,6 +9,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 const MainLayout = ({ children }) => {
+  const router = useRouter();
   const [openSidebar, setOpenSidebar] = useState(false);
   const { openFormProfileModal, closeModal } = FormProfileModal();
 
@@ -19,7 +21,6 @@ const MainLayout = ({ children }) => {
     }
   }, []);
 
-  const router = useRouter();
 
   return (
     <div
@@ -37,7 +38,8 @@ const MainLayout = ({ children }) => {
         }}
       >
         {/* Header */}
-        <MainHeader openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+        <MainHeaderText />
+        {/* <MainHeader openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} /> */}
 
         {/* Konten utama */}
         <div className="flex-1">{children}</div>

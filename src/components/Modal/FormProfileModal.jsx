@@ -1,6 +1,7 @@
-import Swal from "sweetalert2";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import Swal from "sweetalert2";
+import SDKModal from "./S&KModal";
 
 const Inputs = ({ title, placeholder, id, children }) => {
   return (
@@ -24,6 +25,7 @@ const SwalContent = () => {
   const [agreed, setAgreed] = useState(false);
   const [calling_pick, setCallingPick] = useState("");
   const [custom_calling_pick, setCustomCallingPick] = useState("");
+  const { openSDKModal } = SDKModal();
 
   useEffect(() => {
     setNomor(localStorage.getItem("nomor"));
@@ -164,11 +166,17 @@ const SwalContent = () => {
           />
           <p>
             Dengan melanjutkan, saya telah setuju sengan{" "}
-            <a className="underline text-blue-600 cursor-pointer">
+            <a
+              onClick={() => openSDKModal()}
+              className="underline text-blue-600 cursor-pointer"
+            >
               Ketentuan Layanan
             </a>{" "}
             dan{" "}
-            <a className="underline text-blue-600 cursor-pointer">
+            <a
+              onClick={() => openSDKModal()}
+              className="underline text-blue-600 cursor-pointer"
+            >
               Kebijakan Privasi
             </a>{" "}
             Owdi
@@ -191,8 +199,7 @@ const SwalContent = () => {
 };
 
 const FormProfileModal = () => {
-  const openFormProfileModal = (nomor) => {
-    console.log("nomor profile", nomor);
+  const openFormProfileModal = () => {
     const wrapper = document.createElement("div");
 
     // Render the React component inside the div

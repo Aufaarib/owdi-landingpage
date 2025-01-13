@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import formatRupiah from "@/utils/formatRupiah";
 import axios from "axios";
 import Cookies from "js-cookie";
+import LogoutModal from "../Modal/LogoutConfirmModal";
 
 const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
@@ -15,6 +16,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const { openPaymentConfirmModal } = PaymentConfirmModal();
   const [remainingTime, setRemainingTime] = useState();
   const [sessionData, setSessionData] = useState([]);
+  const { openLogoutModal } = LogoutModal();
 
   useEffect(() => {
     axios
@@ -35,13 +37,6 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
 
     return () => clearInterval(interval);
   }, [remainingTime]);
-
-  const onLogout = () => {
-    localStorage.clear();
-    Cookies.remove("nomor");
-    setOpenSidebar(!openSidebar);
-    router.reload();
-  };
 
   return (
     <div
@@ -230,7 +225,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
                 />
               </svg>
 
-              <p className="cursor-pointer" onClick={() => onLogout()}>
+              <p className="cursor-pointer" onClick={openLogoutModal}>
                 <svg
                   width="24"
                   height="24"

@@ -38,11 +38,16 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
     return () => clearInterval(interval);
   }, [remainingTime]);
 
+  const selectedProduct = (id) => {
+    router.push(`/metode-pembayaran?id=${id}`);
+    setOpenSidebar(false);
+    // openPaymentConfirmModal(id)
+  }
+
   return (
     <div
-      className={`flex flex-col justify-between h-screen bg-[#f2e8e5] w-[85%] z-10 backdrop-blur-2xl ${
-        openSidebar ? "block" : "hidden"
-      }`}
+      className={`flex flex-col justify-between h-screen bg-[#f2e8e5] w-[85%] z-10 backdrop-blur-2xl ${openSidebar ? "block" : "hidden"
+        }`}
     >
       <div className="h-screen flex justify-between flex-col">
         {/* Header Section */}
@@ -137,7 +142,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
             <div className="h-full overflow-y-auto no-scrollbar mt-2">
               {sessionData.map((session, index) => (
                 <button
-                  onClick={() => openPaymentConfirmModal(session.id)} // Kirim session.id
+                  onClick={() => selectedProduct(session.id)} // Kirim session.id
                   key={session.id} // Gunakan session.id sebagai key
                   className="inset-0 w-full rounded-xl bg-gradient-to-r from-[#EF2328] to-[#FB942B] p-[1px] my-2"
                 >

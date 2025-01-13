@@ -46,8 +46,11 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
 
   return (
     <div
-      className={`flex justify-between items-center p-4 md:px-14 ${nomor ? "bg-transparent" : "bg-[#FFFFFFBF] bg-opacity-75"
-        }`}
+      className={`flex justify-between items-center p-4 md:px-14 ${
+        nomor
+          ? "sm:bg-transparent md:bg-[#FFFFFFBF] md:bg-opacity-75"
+          : "bg-[#FFFFFFBF] bg-opacity-75"
+      }`}
     >
       <div className="flex items-center gap-4">
         {nomor && (
@@ -55,16 +58,24 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
             onClick={() => setOpenSidebar(!openSidebar)}
             src="/icons/toglePay.png"
             alt="logo"
-            className="object-cover cursor-pointer"
+            className="object-cover cursor-pointer md:hidden"
             width={20}
             height={14}
           />
         )}
 
         <Image
-          src={nomor ? "/img/logo.png" : "/img/logoLogin.png"}
+          src={nomor ? "/img/logo.png" : "/img/owdi-colors 1.png"}
           alt="logo"
-          className="object-cover"
+          className="object-cover md:hidden"
+          width={90}
+          height={25}
+        />
+
+        <Image
+          src={"/img/owdi-colors 1.png"}
+          alt="logo"
+          className="object-cover hidden md:block"
           width={90}
           height={25}
         />
@@ -87,8 +98,8 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
             src={"/icons/icon-coin.png"}
             alt="logo"
             className="object-cover sm:block"
-            width={30}
-            height={30}
+            width={20}
+            height={20}
           />
           <p className="font-semibold text-[18px] mb-0.5">
             {remainingTime !== "00:00" ? `1 Koin` : "0 Koin"}

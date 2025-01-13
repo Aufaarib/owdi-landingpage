@@ -210,7 +210,7 @@ const FormProfileModal = () => {
       html: wrapper,
       showConfirmButton: false,
       customClass: {
-        popup: "bg-white w-[95%] h-auto rounded-[20px] shadow-lg p-0 flex",
+        popup: "bg-white w-[328px] h-auto rounded-[20px] shadow-lg p-0 flex",
       },
     });
   };

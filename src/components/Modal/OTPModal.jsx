@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import FormProfileModal from "./FormProfileModal";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const dumyOTP = 123456;
 
@@ -44,9 +45,9 @@ const OTPModal = () => {
 
                 <div class="w-full flex justify-center gap-2 mb-4">
                     ${new Array(6)
-                      .fill("")
-                      .map(
-                        (_, index) => `
+          .fill("")
+          .map(
+            (_, index) => `
                         <input 
                           type="number" 
                           maxlength="1" 
@@ -54,8 +55,8 @@ const OTPModal = () => {
                           id="otp-${index}" 
                         />
                       `
-                      )
-                      .join("")}
+          )
+          .join("")}
                 </div>
                 <div className="w-full flex justify-center items-center">
                     <button id="resend-otp" class="text-sm font-medium mb-4 font-semibold text-[#0050AE] hidden">
@@ -141,23 +142,65 @@ const OTPModal = () => {
           });
         }
 
-        document.getElementById("submit-otp").addEventListener("click", () => {
+        document.getElementById("submit-otp").addEventListener("click", async () => {
           let otpGet = "";
           for (let i = 0; i < 6; i++) {
-            otpGet += document.getElementById(`otp-${i}`).value;
+            otpGet += document.getElementById(`otp-${i}`).value.trim();
           }
-          if (parseInt(otpGet) === dumyOTP) {
-            localStorage.setItem("nomor", nomor);
-            localStorage.setItem("remainingCoin", 1);
-            Cookies.set("nomor", nomor);
-            router.push("/choose-character");
 
-            openFormProfileModal(nomor);
-            // Swal.fire("OTP Entered", `Your OTP is: ${otpGet}`, "success");
-          } else {
-            Swal.fire("Invalid OTP", "Please enter the correct OTP.", "error");
+          // Validasi OTP harus terdiri dari 6 digit
+          if (otpGet.length !== 6 || !/^\d{6}$/.test(otpGet)) {
+            Swal.fire("Invalid OTP", "Masukkan 6 digit kode OTP yang valid.", "error");
+            return;
+          }
+
+          if (!nomor) {
+            Swal.fire("Error", "Nomor telepon tidak ditemukan. Silakan coba lagi.", "error");
+            return;
+          }
+
+          try {
+            const response = await axios.post(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/auth/verify-otp`,
+              {
+                phone_number: nomor,
+                code: otpGet,
+              },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+
+            // Logika ketika respons berhasil
+            if (response.data.code === 200) {
+              const { fullname, access_token } = response.data.body;
+              localStorage.setItem("nomor", nomor);
+              localStorage.setItem("remainingTime", "10:00");
+              Cookies.set("nomor", nomor);
+              Cookies.set("access_token", access_token);
+
+              if (fullname) {
+                router.push("/choose-character");
+              } else {
+                openFormProfileModal(nomor);
+              }
+            } else {
+              Swal.fire("Invalid OTP", "Kode OTP tidak valid, coba lagi.", "error");
+            }
+          } catch (error) {
+            // Penanganan error API
+            if (error.response) {
+              Swal.fire("Error", error.response.data.message || "Terjadi kesalahan pada server.", "error");
+            } else if (error.request) {
+              Swal.fire("Error", "Tidak ada respons dari server, cek koneksi Anda.", "error");
+            } else {
+              Swal.fire("Error", "Terjadi kesalahan. Silakan coba lagi.", "error");
+            }
           }
         });
+
 
         document.getElementById("resend-otp").addEventListener("click", () => {
           Swal.fire("OTP Resent", "Kode OTP telah dikirim ulang.", "success");

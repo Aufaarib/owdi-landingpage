@@ -15,7 +15,7 @@ const SwalContent = () => {
     <div className="w-full bg-white rounded-[20px] p-4 z-50 flex flex-col gap-5">
       <div className="flex flex-row w-full justify-between">
         <p>Log Out</p>
-        <IconX />
+        <IconX onClick={() => Swal.close()} />
       </div>
       <div className="flex flex-col items-center justify-center gap-7">
         <img className="w-[88px]" src="/icons/warning-icon.png" alt="-" />
@@ -37,6 +37,7 @@ const SwalContent = () => {
           </p>
         </button>
         <button
+          onClick={() => Swal.close()}
           style={{
             background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
           }}
@@ -62,7 +63,7 @@ const LogoutModal = () => {
       html: wrapper,
       showConfirmButton: false,
       customClass: {
-        popup: "bg-white w-[90%] h-auto rounded-[20px] shadow-lg p-0 flex",
+        popup: "bg-white w-[328px] h-auto rounded-[20px] shadow-lg p-0 flex",
       },
     });
   };

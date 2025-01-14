@@ -1,9 +1,21 @@
+import NotEnoughCoinModal from "@/components/Modal/NotEnoughCoinModal";
 import StartChatModal from "@/components/Modal/StartChatModal";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import Image from "next/image";
 
 export default function ChooseCharacter() {
   const { openStartChatModal } = StartChatModal();
+  const { openNotEnoughCoinModal } = NotEnoughCoinModal();
+  const coinLeft = 1;
+
+  const onStartSession = () => {
+    if (coinLeft > 0) {
+      openStartChatModal();
+    } else {
+      openNotEnoughCoinModal();
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-center pt-8">
       <div className="h-[70%] w-full flex flex-col justify-between">
@@ -24,7 +36,7 @@ export default function ChooseCharacter() {
           </div>
         </div>
 
-        <div className="relative mt-[500px] z-[-999] mb-24">
+        <div className="relative mt-[500px] z-[-999] mb-24 w-full md:w-[380px]">
           <Image
             src={"/img/unselected_rico.png"}
             alt="logo"
@@ -56,7 +68,7 @@ export default function ChooseCharacter() {
 
       <div className="bg-white flex items-center justify-center w-full absolute  bottom-0 p-5 rounded-tl-[16px] rounded-tr-[16px] h-[72px]">
         <button
-          onClick={openStartChatModal}
+          onClick={() => onStartSession()}
           style={{
             background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
           }}

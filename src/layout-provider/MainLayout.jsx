@@ -23,7 +23,6 @@ const MainLayout = ({ children }) => {
     }
   }, []);
 
-
   return (
     <div
       className={`relative ${isMainHeaderTextRoute ? "bg-white" : "bg-gradient-to-r from-[#EF2328] to-[#FB942B]"} flex flex-col min-h-screen justify-between max-w-screen m-auto`}
@@ -40,11 +39,16 @@ const MainLayout = ({ children }) => {
         }}
       >
         {/* Header */}
+<<<<<<< HEAD
         {isMainHeaderTextRoute ? (
           <MainHeaderText />
         ) : (
           <MainHeader openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
         )}
+=======
+        {/* <MainHeaderText /> */}
+        <MainHeader openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+>>>>>>> origin/develop
 
         {/* Konten utama */}
         <div className="flex-1">{children}</div>

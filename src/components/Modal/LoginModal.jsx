@@ -3,12 +3,16 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import OTPModal from "./OTPModal";
+import axios from "axios";
 
 const LoginModal = () => {
   const router = useRouter();
   const { openOTPModal } = OTPModal();
+  const api_url = process.env.NEXT_PUBLIC_API_BASE_URL;
+  console.log("api_url", api_url);
 
-  const openLoginModal = () => {
+
+  const openLoginModal = async () => {
     Swal.fire({
       title: "",
       html: `
@@ -54,7 +58,7 @@ const LoginModal = () => {
           if (nomor.startsWith("0")) {
             nomor = nomor.substring(1);
           }
-          nomor = "0" + nomor;
+          nomor = "+62" + nomor;
 
           // // Dummy data untuk login
           // const dummyUsername = "userowdi";
@@ -62,26 +66,27 @@ const LoginModal = () => {
           // console.log("nomor", nomor);
 
           if (nomor) {
-            return openOTPModal(nomor);
-            // if (username === dummyUsername && nomor === dummyNomor) {
-            //   localStorage.setItem("username", username);
-            //   localStorage.setItem("nomor", nomor);
-            //   localStorage.setItem("remainingTime", "10:00");
-            //   router.push("/home");
-            //   Swal.fire({
-            //     icon: "success",
-            //     title: "Login Berhasil",
-            //     text: `Selamat datang, ${username}!`,
-            //     showConfirmButton: true,
-            //   });
-            // } else {
-            //   Swal.fire({
-            //     icon: "error",
-            //     title: "Login Gagal",
-            //     text: "Username atau nomor handphone salah.",
-            //     showConfirmButton: true,
-            //   });
-            // }
+            console.log("nomor", nomor);
+            try {
+              const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/auth/login`,
+                { phone_number: nomor },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                }
+              );
+
+              console.log("Response:", response.data);
+
+              openOTPModal(nomor);
+            } catch (error) {
+              console.log("error", error);
+            }
+
+
+            // return openOTPModal(nomor);
           } else {
             Swal.fire({
               icon: "error",

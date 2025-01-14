@@ -148,7 +148,7 @@ const OTPModal = () => {
           }
           if (parseInt(otpGet) === dumyOTP) {
             localStorage.setItem("nomor", nomor);
-            localStorage.setItem("remainingTime", "10:00");
+            localStorage.setItem("remainingCoin", 1);
             Cookies.set("nomor", nomor);
             router.push("/choose-character");
 

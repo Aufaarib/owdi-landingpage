@@ -4,6 +4,14 @@ import TopupModal from "./TopupModal";
 import { IconX } from "@tabler/icons-react";
 
 const StartChatModal = () => {
+  const onStartSession = () => {
+    const remaining_coin = parseInt(localStorage.getItem("remainingCoin"));
+    const updated_coin = remaining_coin - 1;
+
+    localStorage.setItem("remainingCoin", updated_coin);
+    window.location.href = "/bicara";
+  };
+
   const SwalContent = () => {
     const { openTopupModal } = TopupModal();
     return (
@@ -24,7 +32,7 @@ const StartChatModal = () => {
             </p>
           </div>
           <button
-            onClick={() => (window.location.href = "/bicara")}
+            onClick={() => onStartSession()}
             class="w-full flex h-[40px] justify-center items-center bg-gradient-to-t from-[#EF2328] to-[#FB942B] text-white rounded-[100px] outline-none"
           >
             <p class="mb-1">Lanjutkan</p>

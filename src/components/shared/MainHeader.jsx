@@ -7,30 +7,32 @@ import TopupModal from "../Modal/TopupModal";
 
 const MainHeader = ({ openSidebar, setOpenSidebar }) => {
   const [nomor, setnomor] = useState("");
-  const [remainingTime, setRemainingTime] = useState("");
+  const [remainingCoin, setRemainingCoin] = useState(0);
   const { openLoginModal } = LoginModal();
   const { openTopupModal } = TopupModal();
 
   const handleLogin = async () => {
-    await openLoginModal();
+    openLoginModal();
     getUserData();
   };
 
   const getUserData = () => {
     const storednomor = localStorage.getItem("nomor");
-    const storedTime = localStorage.getItem("remainingTime");
+    const storedCoin = localStorage.getItem("remainingCoin");
+    // const storedTime = localStorage.getItem("remainingTime");
 
     if (storednomor) {
       setnomor(storednomor);
+      setRemainingCoin(storedCoin);
     }
 
-    if (storedTime) {
-      // const remainingTime = parseInt(storedTime);
-      // const remainingTimeInMinutes = moment(remainingTime).minute();
-      // console.log("remainingTimeInMinutes", remainingTimeInMinutes);
+    // if (storedTime) {
+    //   // const remainingTime = parseInt(storedTime);
+    //   // const remainingTimeInMinutes = moment(remainingTime).minute();
+    //   // console.log("remainingTimeInMinutes", remainingTimeInMinutes);
 
-      setRemainingTime(storedTime);
-    }
+    //   setRemainingTime(storedTime);
+    // }
   };
 
   useEffect(() => {
@@ -38,11 +40,11 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
 
     // Sinkronisasi data setiap 1 detik
     const interval = setInterval(() => {
-      setRemainingTime(localStorage.getItem("remainingTime"));
+      setRemainingCoin(localStorage.getItem("remainingTime"));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [remainingTime]);
+  }, [remainingCoin]);
 
   return (
     <div
@@ -102,7 +104,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
             height={20}
           />
           <p className="font-semibold text-[18px] mb-0.5">
-            {remainingTime !== "00:00" ? `1 Koin` : "0 Koin"}
+            {remainingCoin + ` Koin`}
           </p>
           <IconPlus size={24} />
         </button>

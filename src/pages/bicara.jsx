@@ -52,10 +52,10 @@ const Bicara = () => {
     router.push("/home");
   };
 
-  const [countdownTime, setCountdownTime] = useState("");
+  const [countdownTime, setCountdownTime] = useState("15:00");
 
   useEffect(() => {
-    setCountdownTime(localStorage.getItem("remainingTime"));
+    setCountdownTime("15:00");
   }, []);
 
   // Function to decrement time by one second

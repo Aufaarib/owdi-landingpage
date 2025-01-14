@@ -56,10 +56,10 @@ const LoginModal = () => {
           }
           nomor = "0" + nomor;
 
-          // Dummy data untuk login
-          const dummyUsername = "userowdi";
-          const dummyNomor = "08123456789";
-          console.log("nomor", nomor);
+          // // Dummy data untuk login
+          // const dummyUsername = "userowdi";
+          // const dummyNomor = "08123456789";
+          // console.log("nomor", nomor);
 
           if (nomor) {
             return openOTPModal(nomor);

@@ -6,9 +6,10 @@ import Image from "next/image";
 export default function ChooseCharacter() {
   const { openStartChatModal } = StartChatModal();
   const { openNotEnoughCoinModal } = NotEnoughCoinModal();
-  const coinLeft = 1;
 
   const onStartSession = () => {
+    const coinLeft = parseInt(localStorage.getItem("remainingCoin"));
+
     if (coinLeft > 0) {
       openStartChatModal();
     } else {

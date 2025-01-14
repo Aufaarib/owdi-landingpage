@@ -9,14 +9,19 @@ import formatRupiah from "@/utils/formatRupiah";
 import axios from "axios";
 import Cookies from "js-cookie";
 import LogoutModal from "../Modal/LogoutConfirmModal";
+import StartChatModal from "../Modal/StartChatModal";
+import NotEnoughCoinModal from "../Modal/NotEnoughCoinModal";
 
 const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
   const { openTopupModal } = TopupModal();
   const { openPaymentConfirmModal } = PaymentConfirmModal();
-  const [remainingTime, setRemainingTime] = useState();
+  const [remainingCoin, setRemainingCoin] = useState(0);
   const [sessionData, setSessionData] = useState([]);
   const { openLogoutModal } = LogoutModal();
+  const { openStartChatModal } = StartChatModal();
+  const { openNotEnoughCoinModal } = NotEnoughCoinModal();
+  const coinLeft = 0;
 
   useEffect(() => {
     axios
@@ -32,22 +37,31 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   useEffect(() => {
     // Sinkronisasi data setiap 1 detik
     const interval = setInterval(() => {
-      setRemainingTime(localStorage.getItem("remainingTime"));
+      setRemainingCoin(localStorage.getItem("remainingCoin"));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [remainingTime]);
+  }, [remainingCoin]);
 
   const selectedProduct = (id) => {
     router.push(`/metode-pembayaran?id=${id}`);
     setOpenSidebar(false);
     // openPaymentConfirmModal(id)
-  }
+  };
+
+  const onStartSession = () => {
+    if (coinLeft > 0) {
+      openStartChatModal();
+    } else {
+      openNotEnoughCoinModal();
+    }
+  };
 
   return (
     <div
-      className={`flex flex-col justify-between h-screen bg-[#f2e8e5] w-[85%] z-10 backdrop-blur-2xl ${openSidebar ? "block" : "hidden"
-        }`}
+      className={`flex flex-col justify-between h-screen bg-[#f2e8e5] w-[85%] z-10 backdrop-blur-2xl ${
+        openSidebar ? "block" : "hidden"
+      }`}
     >
       <div className="h-screen flex justify-between flex-col">
         {/* Header Section */}
@@ -88,7 +102,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
                     height={30}
                   />
                   <p className="font-semibold text-[18px] mb-0.5">
-                    {remainingTime !== "00:00" ? `1 Koin` : "0 Koin"}
+                    {remainingCoin + ` Koin`}
                   </p>
                 </div>
                 <IconPlus size={24} />
@@ -105,8 +119,9 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
               </p>
               <button
                 onClick={() => {
-                  setOpenSidebar(false);
-                  router.push("/bicara");
+                  // setOpenSidebar(false);
+                  // router.push("/bicara");
+                  onStartSession();
                 }}
                 className="relative flex justify-between items-center gap-2 my-4 bg-gradient-to-r from-[#EF2328] to-[#FB942B] px-8 py-[5px] rounded-2xl text-white"
               >
@@ -120,9 +135,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
                       width={25}
                       height={25}
                     />
-                    <p className="font-normal text-[18px] mb-0.5">
-                      {remainingTime !== "00:00" ? `1 Koin` : "0 Koin"}
-                    </p>
+                    <p className="font-normal text-[18px] mb-0.5">1 Koin</p>
                   </div>
                 </div>
                 <Image

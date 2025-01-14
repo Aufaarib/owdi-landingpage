@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import formatRupiah from "@/utils/formatRupiah";
 
 const MetodePembayaran = () => {
     const router = useRouter();
@@ -62,9 +61,13 @@ const MetodePembayaran = () => {
         }, {});
     };
 
-    const handlePaymentMethodChange = (methodName) => {
-        const paymentMethod = getpaymentMethod(methodName);
-        setSelectedPaymentMethod(paymentMethod);
+    const handlePaymentMethodChange = async (methodId) => {
+        try {
+            const response = await axios.get(`/api/paymentMethods?id=${methodId}`);
+            setSelectedPaymentMethod(response.data);
+        } catch (error) {
+            console.error("Error fetching payment method by ID:", error);
+        }
     };
 
     const getpaymentMethod = (methodName) => {
@@ -102,7 +105,7 @@ const MetodePembayaran = () => {
                         <div className="flex items-center mr-[55px]">
                             <div className="w-3 h-3 rounded-md bg-green-500 mr-2"></div>
                             <div>
-                                <p className="font-semibold text-[#ED0226]">{formatRupiah(produk?.price)}</p>
+                                <p className="font-semibold text-[#ED0226]">{produk?.price}</p>
                                 <p className="line-through text-[#9CA9B9]">100.000</p>
                             </div>
                         </div>
@@ -129,12 +132,12 @@ const MetodePembayaran = () => {
                                         <p>{method.name}</p>
                                     </div>
                                     <input
-                                        id={method.name}
+                                        id={method.id}
                                         type="radio"
-                                        value={method.name.toLowerCase()}
+                                        value={method.id}
                                         name="paymentMethod"
                                         className="w-6 h-6 text-black focus:ring-black checked:bg-black checked:border-black"
-                                        onChange={() => handlePaymentMethodChange(method.name.toLowerCase())}
+                                        onChange={() => handlePaymentMethodChange(method.id)}
                                     />
                                 </label>
                             </div>
@@ -157,7 +160,7 @@ const MetodePembayaran = () => {
                     </div>
                     <div className="flex flex-row items-end justify-end">
                         <p className="font-semibold text-sm">
-                            {formatRupiah(produk?.price + (selectedPaymentMethod?.adminFee || 0))}
+                            Rp {(produk?.price + (selectedPaymentMethod?.adminFee || 0)).toLocaleString()}
                         </p>
                     </div>
                 </div>

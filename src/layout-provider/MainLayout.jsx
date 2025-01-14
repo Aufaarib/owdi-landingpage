@@ -10,6 +10,8 @@ import React, { useEffect, useState } from "react";
 
 const MainLayout = ({ children }) => {
   const router = useRouter();
+  const isMainHeaderTextRoute = router.route === "/metode-pembayaran" || router.route === "/profile";
+
   const [openSidebar, setOpenSidebar] = useState(false);
   const { openFormProfileModal, closeModal } = FormProfileModal();
 
@@ -23,7 +25,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <div
-      className={`relative bg-gradient-to-r from-[#EF2328] to-[#FB942B] flex flex-col min-h-screen justify-between max-w-screen m-auto`}
+      className={`relative ${isMainHeaderTextRoute ? "bg-white" : "bg-gradient-to-r from-[#EF2328] to-[#FB942B]"} flex flex-col min-h-screen justify-between max-w-screen m-auto`}
     >
       {/* Sidebar */}
       <MainSidebar openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
@@ -37,8 +39,16 @@ const MainLayout = ({ children }) => {
         }}
       >
         {/* Header */}
+<<<<<<< HEAD
+        {isMainHeaderTextRoute ? (
+          <MainHeaderText />
+        ) : (
+          <MainHeader openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+        )}
+=======
         {/* <MainHeaderText /> */}
         <MainHeader openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
+>>>>>>> origin/develop
 
         {/* Konten utama */}
         <div className="flex-1">{children}</div>

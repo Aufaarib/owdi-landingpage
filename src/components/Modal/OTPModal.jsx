@@ -184,12 +184,12 @@ const OTPModal = () => {
               );
 
               // Logika ketika respons berhasil
-              if (parseInt(otpGet) === dumyOTP) {
+              if (response.data.code === 200) {
                 const { fullname, access_token } = response.data.body;
                 localStorage.setItem("nomor", nomor);
                 localStorage.setItem("fullname", "");
                 // Cookies.set("nomor", nomor);
-                Cookies.set("access_token", "access_token");
+                Cookies.set("access_token", access_token);
                 //
                 if (fullname) {
                   router.push("/choose-character");
@@ -204,28 +204,28 @@ const OTPModal = () => {
                   "error"
                 );
               }
-            } catch (error) {
+            } catch {
               // Penanganan error API
-              if (error.response) {
-                Swal.fire(
-                  "Error",
-                  error.response.data.message ||
-                    "Terjadi kesalahan pada server.",
-                  "error"
-                );
-              } else if (error.request) {
-                Swal.fire(
-                  "Error",
-                  "Tidak ada respons dari server, cek koneksi Anda.",
-                  "error"
-                );
-              } else {
-                Swal.fire(
-                  "Error",
-                  "Terjadi kesalahan. Silakan coba lagi.",
-                  "error"
-                );
-              }
+              // if (error.response) {
+              Swal.fire(
+                "Error",
+                // error.response.data.message ||
+                "Terjadi kesalahan pada server.",
+                "error"
+              );
+              // } else if (error.request) {
+              //   Swal.fire(
+              //     "Error",
+              //     "Tidak ada respons dari server, cek koneksi Anda.",
+              //     "error"
+              //   );
+              // } else {
+              //   Swal.fire(
+              //     "Error",
+              //     "Terjadi kesalahan. Silakan coba lagi.",
+              //     "error"
+              //   );
+              // }
             }
           });
 

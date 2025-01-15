@@ -102,7 +102,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
                     height={30}
                   />
                   <p className="font-semibold text-[18px] mb-0.5">
-                    {remainingCoin + ` Koin`}
+                    {`${remainingCoin || 0} Koin`}
                   </p>
                 </div>
                 <IconPlus size={24} />

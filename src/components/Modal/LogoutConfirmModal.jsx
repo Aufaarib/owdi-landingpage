@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 const SwalContent = () => {
   const onLogout = () => {
     localStorage.clear();
-    Cookies.remove("nomor");
+    Cookies.remove("access_token");
     window.location.reload();
   };
 

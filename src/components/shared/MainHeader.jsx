@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import LoginModal from "../Modal/LoginModal";
 import moment from "moment";
 import TopupModal from "../Modal/TopupModal";
+import Cookies from "js-cookie";
 
 const MainHeader = ({ openSidebar, setOpenSidebar }) => {
   const [nomor, setnomor] = useState("");
@@ -17,12 +18,12 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
   };
 
   const getUserData = () => {
-    const storednomor = localStorage.getItem("nomor");
+    const logedIn = Cookies.get("access_token");
     const storedCoin = localStorage.getItem("remainingCoin");
-    // const storedTime = localStorage.getItem("remainingTime");
+    const storedNumber = localStorage.getItem("nomor");
 
-    if (storednomor) {
-      setnomor(storednomor);
+    if (logedIn) {
+      setnomor(storedNumber);
       setRemainingCoin(storedCoin);
     }
 
@@ -37,14 +38,15 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
 
   useEffect(() => {
     getUserData();
-
     // Sinkronisasi data setiap 1 detik
-    const interval = setInterval(() => {
-      setRemainingCoin(localStorage.getItem("remainingTime"));
-    }, 1000);
+    if (!nomor) {
+      const interval = setInterval(() => {
+        getUserData();
+      }, 500);
 
-    return () => clearInterval(interval);
-  }, [remainingCoin]);
+      return () => clearInterval(interval);
+    }
+  }, []);
 
   return (
     <div
@@ -58,7 +60,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
         {nomor && (
           <Image
             onClick={() => setOpenSidebar(!openSidebar)}
-            src="/icons/toglePay.png"
+            src="/icons/hamburger.png"
             alt="logo"
             className="object-cover cursor-pointer md:hidden"
             width={20}
@@ -67,7 +69,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
         )}
 
         <Image
-          src={nomor ? "/img/logo.png" : "/img/owdi-colors 1.png"}
+          src={nomor ? "/img/owdi-white.png" : "/img/owdi-colors 1.png"}
           alt="logo"
           className="object-cover md:hidden"
           width={90}
@@ -104,7 +106,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
             height={20}
           />
           <p className="font-semibold text-[18px] mb-0.5">
-            {remainingCoin + ` Koin`}
+            {`${remainingCoin || 0} Koin`}
           </p>
           <IconPlus size={24} />
         </button>

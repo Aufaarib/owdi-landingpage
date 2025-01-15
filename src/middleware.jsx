@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { useEffect, useState } from "react";
 
 export default function middleware(req) {
-  const verify = req.cookies.get("nomor")?.value; // Get the "nomor" cookie value
+  const verify = req.cookies.get("access_token")?.value; // Get the "nomor" cookie value
   const currentPath = new URL(req.url).pathname; // Extract the current path
   // const url = new URL(req.headers.get("referer")).pathname;
 

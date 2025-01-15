@@ -11,7 +11,6 @@ const LoginModal = () => {
   const api_url = process.env.NEXT_PUBLIC_API_BASE_URL;
   console.log("api_url", api_url);
 
-
   const openLoginModal = async () => {
     Swal.fire({
       title: "",
@@ -73,7 +72,7 @@ const LoginModal = () => {
                 { phone_number: nomor },
                 {
                   headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                   },
                 }
               );
@@ -85,8 +84,7 @@ const LoginModal = () => {
               console.log("error", error);
             }
 
-
-            // return openOTPModal(nomor);
+            return openOTPModal(nomor);
           } else {
             Swal.fire({
               icon: "error",

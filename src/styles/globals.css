@@ -35,6 +35,25 @@ input[type="number"] {
   border-radius: 12px;
 }
 
+.half-circle {
+  width: 360px;
+  height: 155px;
+  background: linear-gradient(to right, #EF2328, #FB942B);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 206px;
+  border-bottom-right-radius: 206px;
+  position: relative;
+  text-align: center;
+}
+
+.TransaksiSukses {
+  width: 160px;
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
 
 /* @media (min-width: 599px) {

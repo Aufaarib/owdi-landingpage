@@ -8,8 +8,6 @@ import axios from "axios";
 const LoginModal = () => {
   const router = useRouter();
   const { openOTPModal } = OTPModal();
-  const api_url = process.env.NEXT_PUBLIC_API_BASE_URL;
-  console.log("api_url", api_url);
 
   const openLoginModal = async () => {
     Swal.fire({

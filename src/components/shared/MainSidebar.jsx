@@ -11,13 +11,16 @@ import Cookies from "js-cookie";
 import LogoutModal from "../Modal/LogoutConfirmModal";
 import StartChatModal from "../Modal/StartChatModal";
 import NotEnoughCoinModal from "../Modal/NotEnoughCoinModal";
+import PeymentMethodModal from "../Modal/PeymentMethodModal";
 
 const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
+  const { openFormPeymentMethod } = PeymentMethodModal();
   const { openTopupModal } = TopupModal();
   const { openPaymentConfirmModal } = PaymentConfirmModal();
   const [remainingCoin, setRemainingCoin] = useState(0);
   const [sessionData, setSessionData] = useState([]);
+  const [subscriptionData, setSubscriptionData] = useState([]);
   const { openLogoutModal } = LogoutModal();
   const { openStartChatModal } = StartChatModal();
   const { openNotEnoughCoinModal } = NotEnoughCoinModal();
@@ -35,6 +38,19 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   }, []);
 
   useEffect(() => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/subscription/all`) // Mengakses endpoint API
+      .then((response) => {
+        console.log("subscriptionData", response.data.body);
+
+        setSubscriptionData(response.data.body);
+      })
+      .catch((error) => {
+        console.error("Error fetching session data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
     // Sinkronisasi data setiap 1 detik
     const interval = setInterval(() => {
       setRemainingCoin(localStorage.getItem("remainingCoin"));
@@ -44,10 +60,10 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   }, [remainingCoin]);
 
   const selectedProduct = (id) => {
-    router.push(`/metode-pembayaran?id=${id}`);
-    setOpenSidebar(false);
-    // openPaymentConfirmModal(id)
+    openFormPeymentMethod(id)
   };
+  // router.push(`/metode-pembayaran?id=${id}`);
+  // setOpenSidebar(false);
 
   const onStartSession = () => {
     if (coinLeft > 0) {
@@ -59,9 +75,8 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
 
   return (
     <div
-      className={`flex flex-col justify-between h-screen bg-[#f2e8e5] w-[85%] z-10 backdrop-blur-2xl ${
-        openSidebar ? "block" : "hidden"
-      }`}
+      className={`flex flex-col justify-between h-screen bg-[#f2e8e5] w-[85%] z-10 backdrop-blur-2xl ${openSidebar ? "block" : "hidden"
+        }`}
     >
       <div className="h-screen flex justify-between flex-col">
         {/* Header Section */}
@@ -153,43 +168,39 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
           <div className="flex h-[58vh] flex-col px-4">
             <p className="font-semibold text-md">Top Up Koin</p>
             <div className="h-full overflow-y-auto no-scrollbar mt-2">
-              {sessionData.map((session, index) => (
+              {subscriptionData.map((subscription) => (
                 <button
-                  onClick={() => selectedProduct(session.id)} // Kirim session.id
-                  key={session.id} // Gunakan session.id sebagai key
+                  onClick={() => selectedProduct(subscription.plan_code)} // Kirim subscriptin.id
+                  key={subscription.id} // Gunakan subscriptin.id sebagai key
                   className="inset-0 w-full rounded-xl bg-gradient-to-r from-[#EF2328] to-[#FB942B] p-[1px] my-2"
                 >
                   <div className="relative flex items-center bg-[#f2dbd5] rounded-xl h-full px-4 py-5">
                     {/* Rata Kiri */}
                     <div className="w-[120px] text-xs font-semibold text-left">
-                      <p>{session.time}</p>
-                      {session.label && (
+                      <p>{subscription?.coin} koin</p>
+                      {subscription.discount > 0 && (
                         <div
-                          className={`absolute top-0 text-[10px] text-white bg-gradient-to-r ${session.labelGradient} px-2 py-1 rounded-b-xl`}
+                          className={`absolute top-0 text-[10px] text-white bg-gradient-to-r from-[#EF2328] to-[#FB942B] px-2 py-1 rounded-b-xl`}
                         >
-                          <p>{session.label}</p>
+                          <p>Promo</p>
                         </div>
                       )}
                     </div>
 
                     {/* Rata Tengah */}
                     <div className="flex justify-center items-center flex-1">
-                      {session.promo && (
-                        <Image
-                          src="/icons/promo.png"
-                          alt="Promo Icon"
-                          width={24}
-                          height={24}
-                          className="mb-1 w-6 h-6"
-                        />
+                      {subscription?.discount > 0 && (
+                        <div className="bg-[url('/icons/discount.png')] bg-no-repeat bg-center w-6 h-6 flex justify-center items-center">
+                          <p className="text-[8px] text-white font-semibold ">{subscription?.discount}%</p>
+                        </div>
                       )}
                       <div className="text-center">
                         <p className="m-0 text-xs">
-                          {formatRupiah(session.price)}
+                          {formatRupiah(subscription?.special_price)}
                         </p>
-                        {session.oldPrice && (
+                        {subscription?.discount > 0 && (
                           <span className="text-[10px] line-through text-[#9CA9B9]">
-                            {formatRupiah(session.oldPrice)}
+                            {formatRupiah(subscription?.price)}
                           </span>
                         )}
                       </div>

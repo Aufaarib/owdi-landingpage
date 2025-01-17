@@ -1,15 +1,23 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/router";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import axios from "axios";
 import formatRupiah from "@/utils/formatRupiah";
+import { IconArrowLeft } from "@tabler/icons-react";
+import PaymentStatusModal from "./PaymentStatusModal";
 
-const MetodePembayaran = () => {
-    const router = useRouter();
+const MySwal = withReactContent(Swal);
+
+const PeymentMethod = ({ codeSubscription }) => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
     const [produk, setProduk] = useState(null);
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [loading, setLoading] = useState(true);
     const [produkLoading, setProdukLoading] = useState(true);
+    const { openPaymentStatusModal } = PaymentStatusModal();
+    console.log("paymentMethods", codeSubscription);
+
 
     useEffect(() => {
         const fetchPaymentMethods = async () => {
@@ -27,32 +35,18 @@ const MetodePembayaran = () => {
     }, []);
 
     useEffect(() => {
-        const fetchPaymentMethods1 = async () => {
-            try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/payment/fetch`);
-                console.log("paymentMethods1", response.data.body);
-
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching payment methods:", error);
-                setLoading(false);
-            }
-        };
-
-        fetchPaymentMethods1();
-    }, []);
-
-    useEffect(() => {
         const fetchProductData = async () => {
-            const productId = router.query.id;
-
-            if (productId) {
+            if (codeSubscription) {
                 try {
-                    const response = await axios.get(`/api/session?id=${productId}`);
-                    setProduk(response.data);
-                    setProdukLoading(false);
+                    const response = await axios.get(
+                        `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/subscription/code/${codeSubscription}`
+                    );
+                    setProduk(response.data.body);
+                    console.log("produk", response.data.body);
+
                 } catch (error) {
                     console.error("Error fetching product:", error);
+                } finally {
                     setProdukLoading(false);
                 }
             } else {
@@ -60,12 +54,8 @@ const MetodePembayaran = () => {
             }
         };
 
-        if (router.query.id) {
-            fetchProductData();
-        } else {
-            setProdukLoading(false);
-        }
-    }, [router.query.id]);
+        fetchProductData();
+    }, [codeSubscription]);
 
     const groupByCategory = (paymentMethods) => {
         return paymentMethods.reduce((grouped, method) => {
@@ -79,27 +69,37 @@ const MetodePembayaran = () => {
     };
 
     const handlePaymentMethodChange = (methodName) => {
-        const paymentMethod = getpaymentMethod(methodName);
+        const paymentMethod = paymentMethods.find(
+            (item) => item.payment_name.toLowerCase() === methodName.toLowerCase()
+        );
         setSelectedPaymentMethod(paymentMethod);
-    };
-
-    const getpaymentMethod = (methodName) => {
-        return paymentMethods.find((item) => item.payment_name.toLowerCase() === methodName.toLowerCase());
     };
 
     const handleBayarClick = () => {
         if (selectedPaymentMethod && produk) {
-            const total = produk.price + selectedPaymentMethod.admin_fee || 0;
+            const total = produk.special_price + (selectedPaymentMethod.admin_fee || 0);
             const dataPayment = {
-                produk: produk,
+                status: "success",
+                produk,
                 paymentMethod: selectedPaymentMethod,
-                total: total,
+                total,
             };
-            console.log('data payment', dataPayment);
-            console.log(`Total yang harus dibayar: Rp ${total.toLocaleString()}`);
+
+            Swal.close();
+            openPaymentStatusModal(dataPayment);
+            console.log("Data Payment:", dataPayment);
         } else {
             console.log("Belum memilih metode pembayaran atau produk belum dipilih");
         }
+    };
+
+    const handleCloseModal = () => {
+        Swal.close();
+        const status = "success";
+        const message = "Pembayaran sebesar Rp150.000 berhasil dilakukan.";
+
+
+
     };
 
     if (loading || produkLoading) {
@@ -108,28 +108,49 @@ const MetodePembayaran = () => {
 
     return (
         <div className="relative flex flex-col items-center bg-[#EFF1F4] min-h-screen pb-[110px]">
+            <div className="p-4 md:px-14 grid grid-cols-3 items-center bg-[#EFF1F4]">
+                <div className="text-left">
+                    <IconArrowLeft onClick={handleCloseModal} />
+                </div>
+
+                <div className="text-center text-sm whitespace-nowrap">
+                    Metode Pembayaran
+                </div>
+            </div>
+            {/* Product Section */}
             <div className="mt-4 h-[76px] w-[328px] rounded-md bg-gradient-to-r from-[#EF2328] to-[#FB942B] p-1">
                 <div className="relative flex items-center px-4 h-full w-full bg-[#f0d3ce]">
-                    <div className="absolute top-0 left-2 px-4 text-[12px] rounded-b-md bg-gradient-to-r from-[#EF2328] to-[#FB942B]">
-                        promo
-                    </div>
+                    {produk?.discount > 0 && (
+                        <div className="absolute top-0 left-2 px-4 text-[12px] rounded-b-md bg-gradient-to-r from-[#EF2328] to-[#FB942B]">
+                            promo
+                        </div>
+                    )}
+
                     <div className="flex justify-between items-center w-full">
-                        <p className="text-sm font-semibold">{produk?.koin} coin</p>
+                        <p className="text-sm font-semibold">{produk?.coin} coin</p>
                         <div className="flex items-center mr-[55px]">
-                            <div className="w-3 h-3 rounded-md bg-green-500 mr-2"></div>
+                            {produk?.discount > 0 && (
+                                <div className="w-[26px] rounded-md bg-[url('/icons/discount.png')] bg-no-repeat mr-2 text-center">
+                                    <p className="text-[8px] text-white font-semibold">{produk?.discount}%</p>
+                                </div>
+                            )
+                            }
+
                             <div>
-                                <p className="font-semibold text-[#ED0226]">{formatRupiah(produk?.price)}</p>
-                                <p className="line-through text-[#9CA9B9]">100.000</p>
+                                <p className="font-semibold text-[#ED0226]">{formatRupiah(produk?.special_price)}</p>
+                                {produk?.discount > 0 && <p className="line-through text-[#9CA9B9]">{formatRupiah(produk?.price)}</p>}
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            {/* Payment Methods */}
             <div className="bg-[#FFFFFF80] flex flex-col w-[328px] mt-4 rounded-lg px-4 border-2 border-[#DAE0E9]">
                 {Object.entries(groupByCategory(paymentMethods)).map(([category, methods]) => (
                     <div key={category}>
-                        <p className="mb-2 font-semibold capitalize">{category}</p>
+                        <p className="my-2 font-semibold capitalize text-left">{category}</p>
                         {methods.map((method) => (
                             <div key={method.payment_name}>
                                 <label
@@ -159,7 +180,8 @@ const MetodePembayaran = () => {
                 ))}
             </div>
 
-            <div className="h-[108px] w-full fixed bottom-0 rounded-md bg-white pt-[10px] pb-[20px] px-4">
+            {/* Footer */}
+            <div className=" w-full absolute bottom-0 rounded-md bg-white pt-[10px] pb-[20px] px-4">
                 <div className="grid grid-cols-2 items-center mb-4">
                     <div className="flex flex-row items-center">
                         {selectedPaymentMethod && selectedPaymentMethod.payment_logo && (
@@ -173,7 +195,7 @@ const MetodePembayaran = () => {
                     </div>
                     <div className="flex flex-row items-end justify-end">
                         <p className="font-semibold text-sm">
-                            {formatRupiah(produk?.price + (selectedPaymentMethod?.admin_fee || 0))}
+                            {formatRupiah(produk?.special_price + (selectedPaymentMethod?.admin_fee || 0))}
                         </p>
                     </div>
                 </div>
@@ -188,4 +210,22 @@ const MetodePembayaran = () => {
     );
 };
 
-export default MetodePembayaran;
+const PeymentMethodModal = () => {
+
+    const openFormPeymentMethod = (codeSubscription) => {
+        console.log("codeSubscription", codeSubscription);
+
+        MySwal.fire({
+            html: <PeymentMethod codeSubscription={codeSubscription} />,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            customClass: {
+                popup: "bg-[#EFF1F4] w-[328px] h-auto rounded-[20px] shadow-lg p-2",
+            },
+        });
+    };
+
+    return { openFormPeymentMethod };
+};
+
+export default PeymentMethodModal;

@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-const dumyOTP = 123456;
 
 const OTPModal = () => {
   const { openFormProfileModal } = FormProfileModal();
@@ -14,7 +13,7 @@ const OTPModal = () => {
   const router = useRouter();
 
   const openOTPModal = (nomor) => {
-    let countdown = 180; // 3 menit dalam detik
+    let countdown = 180;
     let countdownInterval;
 
     const updateCountdownDisplay = () => {
@@ -45,9 +44,9 @@ const OTPModal = () => {
 
                 <div class="w-full flex justify-center gap-2 mb-4">
                     ${new Array(6)
-                      .fill("")
-                      .map(
-                        (_, index) => `
+          .fill("")
+          .map(
+            (_, index) => `
                         <input 
                           type="number" 
                           maxlength="1" 
@@ -55,8 +54,8 @@ const OTPModal = () => {
                           id="otp-${index}" 
                         />
                       `
-                      )
-                      .join("")}
+          )
+          .join("")}
                 </div>
                 <div className="w-full flex justify-center items-center">
                     <button id="resend-otp" class="text-sm font-medium mb-4 font-semibold text-[#0050AE] hidden">
@@ -169,6 +168,28 @@ const OTPModal = () => {
               return;
             }
 
+            const dumyOTP = 123456;
+            const dumyToken = "dummy-token";
+
+            // if (parseInt(otpGet) === dumyOTP) {
+            //   localStorage.setItem("nomor", nomor);
+            //   localStorage.setItem("fullname", "Name User");
+            //   Cookies.set("access_token", dumyToken);
+            //   router.push("/choose-character");
+            //   openFormProfileModal(nomor);
+            //   return;
+            // } else {
+
+            //   Swal.fire(
+            //     "Invalid OTP",
+            //     "Kode OTP yang Anda masukkan salah. Silakan coba lagi.",
+            //     "error"
+            //   ).then(() => {
+            //     openOTPModal(nomor);
+            //   });
+            //   return;
+            // }
+
             try {
               const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/auth/verify-otp`,
@@ -187,7 +208,7 @@ const OTPModal = () => {
               if (response.data.code === 200) {
                 const { fullname, access_token } = response.data.body;
                 localStorage.setItem("nomor", nomor);
-                localStorage.setItem("fullname", "");
+                localStorage.setItem("fullname", fullname || "");
                 // Cookies.set("nomor", nomor);
                 Cookies.set("access_token", access_token);
                 //

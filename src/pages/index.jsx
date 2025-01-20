@@ -371,8 +371,8 @@ export default function Home() {
               Mau Owdi ceritakan topik dibawah ini?
             </p>
             <div className="flex flex-row gap-6 overflow-auto no-scrollbar">
-              {[...Array(20)].map(() => (
-                <ButtonCategory setIsOpenCategory={setIsOpenCategory} />
+              {[...Array(20)].map((item, index) => (
+                <ButtonCategory setIsOpenCategory={setIsOpenCategory} key={index} />
               ))}
             </div>
           </div>

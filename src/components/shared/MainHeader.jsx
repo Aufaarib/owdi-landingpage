@@ -5,12 +5,14 @@ import LoginModal from "../Modal/LoginModal";
 import moment from "moment";
 import TopupModal from "../Modal/TopupModal";
 import Cookies from "js-cookie";
+import TopUpMDL from "../Modal/TopUpMDL";
 
 const MainHeader = ({ openSidebar, setOpenSidebar }) => {
   const [nomor, setnomor] = useState("");
   const [remainingCoin, setRemainingCoin] = useState(0);
   const { openLoginModal } = LoginModal();
   const { openTopupModal } = TopupModal();
+  const { openTopUpMDL } = TopUpMDL();
 
   const handleLogin = async () => {
     openLoginModal();
@@ -50,11 +52,10 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
 
   return (
     <div
-      className={`flex justify-between items-center p-4 md:px-14 ${
-        nomor
-          ? "sm:bg-transparent md:bg-[#FFFFFFBF] md:bg-opacity-75"
-          : "bg-[#FFFFFFBF] bg-opacity-75"
-      }`}
+      className={`flex justify-between items-center p-4 md:px-14 ${nomor
+        ? "sm:bg-transparent md:bg-[#FFFFFFBF] md:bg-opacity-75"
+        : "bg-[#FFFFFFBF] bg-opacity-75"
+        }`}
     >
       <div className="flex items-center gap-4">
         {nomor && (
@@ -95,7 +96,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
 
       {nomor ? (
         <button
-          onClick={() => openTopupModal()}
+          onClick={() => openTopUpMDL()}
           className="flex items-center gap-2 justify-center bg-[#001A41] text-white px-7 py-1 rounded-full"
         >
           <Image

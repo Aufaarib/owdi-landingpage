@@ -6,6 +6,7 @@ import axios from "axios";
 import formatRupiah from "@/utils/formatRupiah";
 import { IconArrowLeft } from "@tabler/icons-react";
 import PaymentStatusModal from "./PaymentStatusModal";
+import Cookies from "js-cookie";
 
 const MySwal = withReactContent(Swal);
 
@@ -16,7 +17,8 @@ const PeymentMethod = ({ codeSubscription }) => {
     const [loading, setLoading] = useState(true);
     const [produkLoading, setProdukLoading] = useState(true);
     const { openPaymentStatusModal } = PaymentStatusModal();
-    console.log("paymentMethods", codeSubscription);
+    const token = Cookies.get("access_token");
+    const nomer = localStorage.getItem("nomor");
 
 
     useEffect(() => {
@@ -75,7 +77,7 @@ const PeymentMethod = ({ codeSubscription }) => {
         setSelectedPaymentMethod(paymentMethod);
     };
 
-    const handleBayarClick = () => {
+    const handleBayarClick = async () => {
         if (selectedPaymentMethod && produk) {
             const total = produk.special_price + (selectedPaymentMethod.admin_fee || 0);
             const dataPayment = {
@@ -84,10 +86,38 @@ const PeymentMethod = ({ codeSubscription }) => {
                 paymentMethod: selectedPaymentMethod,
                 total,
             };
+            // console.log('data payment', dataPayment);
+            // return;
 
-            Swal.close();
-            openPaymentStatusModal(dataPayment);
-            console.log("Data Payment:", dataPayment);
+            try {
+                const ressponse = await axios.post(
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/transaction/create`,
+                    {
+                        msisdn: nomer,
+                        plan_code: produk.plan_code,
+                        payment_method: selectedPaymentMethod.payment_type,
+                        payment_code: selectedPaymentMethod.payment_code
+                    }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                }
+                );
+                if (ressponse.status === 200) {
+                    Swal.close();
+                    openPaymentStatusModal(dataPayment);
+                    console.log("Data Payment:", dataPayment);
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Terjadi kesalahan saat melakukan pembayaran.",
+                })
+            }
+
+
         } else {
             console.log("Belum memilih metode pembayaran atau produk belum dipilih");
         }

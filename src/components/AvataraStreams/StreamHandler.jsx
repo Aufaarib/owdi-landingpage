@@ -1,33 +1,34 @@
 "use client";
 
-import { StreamPlayer, useAvatarStream } from "@avatara/avatar-stream";
+import { useAvatarStream } from "@avatara/avatar-stream";
 import { useState } from "react";
 import ContinuousSessionButton from "./ContinuousSessionButton";
 // import { ContinuousSessionButtonRef } from "./buttons/ContinuousButton";
 const StreamHandler = ({
   interaction,
   enableInterrupt,
-  enableText = true,
+  // enableText = true,
   star,
+  onStreamStatusUpdate,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   //   const sessionButtonRef = useRef < ContinuousSessionButtonRef > null;
 
-  // const {
-  //   streamRefs,
-  //   isSpeakLoading,
-  //   // isSpeechPaused,
-  //   isAvatarTalking,
-  //   pause,
-  //   // resume,
-  //   speak,
-  //   initPlayer,
-  // } = useAvatarStream({
-  //   star,
-  //   // onSpeechEnd: () => {
-  //   //   // sessionButtonRef.current?.resumeListening();
-  //   // },
-  // });
+  const {
+    streamRefs,
+    isSpeakLoading,
+    // isSpeechPaused,
+    isAvatarTalking,
+    // pause,
+    // // resume,
+    // speak,
+    initPlayer,
+  } = useAvatarStream({
+    star,
+    // onSpeechEnd: () => {
+    //   sessionButtonRef.current?.resumeListening();
+    // },
+  });
 
   // const {
   //   isLoadingSession,
@@ -214,10 +215,8 @@ const StreamHandler = ({
   // }, [interaction, enableInterrupt, enableText, endSession]);
 
   return (
-    <div className="relative flex h-full max-w-full flex-col items-center bg-black">
-      {/* <h1 className="invisible font-semibold sm:visible">{star.name}</h1> */}
-      {/* {stream ? ( */}
-      {/* <StreamPlayer
+    <>
+      <StreamPlayer
         // containerClassName="w-full h-full" // default
         // containerStyle={{ <= example of containerStyle
         //   height: '640px',
@@ -226,11 +225,11 @@ const StreamHandler = ({
         // }}
         isTalking={isAvatarTalking}
         streamRefs={streamRefs}
-        onLoadStart={() => alert("loading...")}
-        onLoadedData={() => alert("done")}
-      /> */}
+        onLoadStart={() => onStreamStatusUpdate(false)}
+        onLoadedData={() => onStreamStatusUpdate(true)}
+      />
 
-      {/* <ContinuousSessionButton
+      <ContinuousSessionButton
         // ref={sessionButtonRef}
         // endSession={handleEndSession}
         initPlayer={initPlayer}
@@ -239,39 +238,66 @@ const StreamHandler = ({
         // startSession={handleStartSession}
         // uploadAudioFn={uploadAudioFn}
         // onTranscription={speak}
-      /> */}
+      />
+    </>
+    // <div className="relative flex h-full max-w-full flex-col items-center bg-black">
+    //   {/* <h1 className="invisible font-semibold sm:visible">{star.name}</h1> */}
+    //   {/* {stream ? ( */}
+    //   {/* <StreamPlayer
+    //     // containerClassName="w-full h-full" // default
+    //     // containerStyle={{ <= example of containerStyle
+    //     //   height: '640px',
+    //     //   width: '360px',
+    //     //   backgroundColor: 'white',
+    //     // }}
+    //     isTalking={isAvatarTalking}
+    //     streamRefs={streamRefs}
+    //     onLoadStart={() => alert("loading...")}
+    //     onLoadedData={() => alert("done")}
+    //   /> */}
 
-      {/* <button
-        className="bg-red-400 cursor-pointer z-[99999]"
-        onClick={() => handleStartSession()}
-      >
-        afknfassfas
-      </button> */}
-      {/* ) : (
-        <AvatarStreamPlaceholder src={star.banner_pic} />
-      )} */}
-      {/* {interaction === 'continuous' ? (
-        <ContinuousSessionButton
-          ref={sessionButtonRef}
-          endSession={handleEndSession}
-          isLoading={isLoading || isLoadingSession}
-          isSessionActive={!!stream}
-          startSession={handleStartSession}
-          uploadAudioFn={uploadAudioFn}
-          onTranscription={speak}
-        />
-      ) : (
-        <HoldSpeakButton
-          disabled={disabled}
-          endSession={handleEndSession}
-          isLoading={isLoading || isLoadingSession}
-          isSessionActive={!!stream}
-          startSession={handleStartSession}
-          uploadAudioFn={uploadAudioFn}
-          onTranscription={speak}
-        />
-      )} */}
-    </div>
+    //   {/* <ContinuousSessionButton
+    //     // ref={sessionButtonRef}
+    //     // endSession={handleEndSession}
+    //     initPlayer={initPlayer}
+    //     isLoading={isLoading || isSpeakLoading}
+    //     // isSessionActive={isSessionActive}
+    //     // startSession={handleStartSession}
+    //     // uploadAudioFn={uploadAudioFn}
+    //     // onTranscription={speak}
+    //   /> */}
+
+    //   {/* <button
+    //     className="bg-red-400 cursor-pointer z-[99999]"
+    //     onClick={() => handleStartSession()}
+    //   >
+    //     afknfassfas
+    //   </button> */}
+    //   {/* ) : (
+    //     <AvatarStreamPlaceholder src={star.banner_pic} />
+    //   )} */}
+    //   {/* {interaction === 'continuous' ? (
+    //     <ContinuousSessionButton
+    //       ref={sessionButtonRef}
+    //       endSession={handleEndSession}
+    //       isLoading={isLoading || isLoadingSession}
+    //       isSessionActive={!!stream}
+    //       startSession={handleStartSession}
+    //       uploadAudioFn={uploadAudioFn}
+    //       onTranscription={speak}
+    //     />
+    //   ) : (
+    //     <HoldSpeakButton
+    //       disabled={disabled}
+    //       endSession={handleEndSession}
+    //       isLoading={isLoading || isLoadingSession}
+    //       isSessionActive={!!stream}
+    //       startSession={handleStartSession}
+    //       uploadAudioFn={uploadAudioFn}
+    //       onTranscription={speak}
+    //     />
+    //   )} */}
+    // </div>
   );
 };
 

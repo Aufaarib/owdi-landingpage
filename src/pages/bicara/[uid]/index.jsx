@@ -10,6 +10,8 @@ const Bicara = () => {
   const router = useRouter();
   const [countdownTime, setCountdownTime] = useState("15:00");
   const char_uid = params?.uid;
+  const [isStreamReady, setIsStreamReady] = useState(false);
+
   // const [remainingTime, setRemainingTime] = useState(0);
 
   // useEffect(() => {
@@ -155,11 +157,11 @@ const Bicara = () => {
       </div>
 
       <AvatarStreamer
-        enableInterrupt="disabled"
+        enableInterrupt={false}
         // enableText={settings.text === 'enabled'}
-        interaction="continuous"
+        interaction={"continuous"}
         star={star}
-        // onStreamStatusUpdate={onStreamStatusUpdate}
+        onStreamStatusUpdate={setIsStreamReady}
       />
 
       {/* <Image src={star?.banner_pic} alt="err" width={120} height={120} /> */}

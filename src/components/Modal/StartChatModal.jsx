@@ -2,14 +2,21 @@ import ReactDOM from "react-dom";
 import Swal from "sweetalert2";
 import TopupModal from "./TopupModal";
 import { IconX } from "@tabler/icons-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const StartChatModal = () => {
+  const router = useRouter();
+  const [uid, setUid] = useState("2ppiObWYvS3sZScI7uLitb1LtHj");
+
   const onStartSession = () => {
     const remaining_coin = parseInt(localStorage.getItem("remainingCoin"));
     const updated_coin = remaining_coin - 1;
 
     localStorage.setItem("remainingCoin", updated_coin);
-    window.location.href = "/bicara";
+    router.push(`/bicara/${uid}`);
+    Swal.close();
+    // window.location.href = `/bicara/${uid}`;
   };
 
   const SwalContent = () => {
@@ -63,7 +70,7 @@ const StartChatModal = () => {
     Swal.close();
   };
 
-  return { openStartChatModal, closeModal };
+  return { openStartChatModal, closeModal, setUid };
 };
 
 export default StartChatModal;

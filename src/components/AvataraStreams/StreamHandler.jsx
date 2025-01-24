@@ -1,303 +1,232 @@
 "use client";
 
-import { useAvatarStream } from "@avatara/avatar-stream";
-import { useState } from "react";
+import {
+  StreamPlayer,
+  useAvatarStream,
+  useRecordAndSTTForContinuous,
+} from "@avatara/avatar-stream";
+import Cookies from "js-cookie";
+import { useEffect, useMemo, useState } from "react";
 import ContinuousSessionButton from "./ContinuousSessionButton";
+import axios from "axios";
+import Image from "next/image";
+
 // import { ContinuousSessionButtonRef } from "./buttons/ContinuousButton";
 const StreamHandler = ({
   interaction,
   enableInterrupt,
   // enableText = true,
+  onStart,
   star,
   onStreamStatusUpdate,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  //   const sessionButtonRef = useRef < ContinuousSessionButtonRef > null;
+  const [isSessionActive, setIsSessionActive] = useState(false);
 
   const {
     streamRefs,
     isSpeakLoading,
     // isSpeechPaused,
     isAvatarTalking,
-    // pause,
-    // // resume,
-    // speak,
+    pause,
+    // resume,
+    speak,
     initPlayer,
   } = useAvatarStream({
     star,
-    // onSpeechEnd: () => {
-    //   sessionButtonRef.current?.resumeListening();
-    // },
+    onSpeechEnd: () => {
+      console.log("dsada");
+    },
   });
 
-  // const {
-  //   isLoadingSession,
-  //   isLoadingSpeak,
-  //   mediaStreamRef,
-  //   messages,
-  //   stream,
-  //   isAvatarTalking,
-  //   isMuted,
-  //   speak,
-  //   startSession,
-  //   setMessages,
-  //   // muteMic,
-  //   // unmuteMic,
-  //   // interrupt,
-  //   // debug
-  //   endSession,
-  // } = useAvatarStream({
-  //   // interactiveConfig: star.interactive_config,
-  //   enableInterrupt,
-  //   eventCallbacks: {
-  //     onAvatarStartTalking: () => {},
-  //     onAvatarStopTalking: () => {
-  //       sessionButtonRef.current?.resumeListening();
-  //     },
-  //     onAvatarTalkingMessage: (message) => {
-  //       console.log("Avatar talking message:", message);
-  //     },
-  //     onError: (error) => {
-  //       console.error("Error:", error);
-  //     },
-  //     onStreamDisconnected: () => {},
-  //     onStreamReady: () => {},
-  //   },
-  //   quality: AvatarQuality.High,
-  // });
+  const uploadAudioFn = async (audioBlob) => {
+    setIsLoading(true);
+    try {
+      const conversation_uid = localStorage.getItem("conversation_uid");
 
-  // const handleEndSession = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     await endSession();
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+      if (!conversation_uid) {
+        throw new Error("Conversation UID not found");
+      }
+      const token = localStorage.getItem("token");
 
-  // const handleStartSession = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await fetch("/api/avatara-apis/get-access-token", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ remote_id: "maz-playground-remote-id" }),
-  //     });
-  //     // .then((res) => res.json())
-  //     // .then((data) => console.log(data))
-  //     // .catch((error) => console.error("Error:", error));
+      if (!token) {
+        throw new Error("Token not found");
+      }
 
-  //     if (!response.ok) {
-  //       throw new Error(`Error: ${response.status} ${response.statusText}`);
-  //     }
+      console.log(audioBlob);
 
-  //     const data = await response.json();
+      const formData = new FormData();
 
-  //     if (!data.stream_token || !data.token) {
-  //       throw new Error("Invalid token response");
-  //     }
+      formData.append("conversation_uid", conversation_uid || "");
+      formData.append("audio", audioBlob);
 
-  //     localStorage.setItem("stream_token", data.stream_token);
-  //     localStorage.setItem("token", data.token);
+      const response = await fetch("/api/avatara-apis/post-sts", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  //     const conversationResponse = await fetch(
-  //       "/api/avatara-apis/get-conversation",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           Authorization: `Bearer ${data.token}`,
-  //         },
-  //         body: JSON.stringify({ star_uid: star.uid }),
-  //       }
-  //     );
+      // if (!response.ok) {
+      //   throw new Error("Failed to upload audio");
+      // }
 
-  //     if (!conversationResponse.ok) {
-  //       throw new Error(
-  //         `Error: ${conversationResponse.status} ${conversationResponse.statusText}`
-  //       );
-  //     }
+      console.log(response);
 
-  //     const conversationData = await conversationResponse.json();
+      await speak(response);
 
-  //     if (!conversationData || !conversationData.uid) {
-  //       throw new Error("Invalid conversation data");
-  //     }
+      return "";
+    } catch (error) {
+      // console.error("Error during STS request:", error);
+      throw new Error("Failed to get transcription");
+    } finally {
+      setIsLoading(false);
+      // only resume listening if enableInterrupt is true
+      // otherwise, the button will be disabled until finish talking
+      // if (enableInterrupt) {
+      //   sessionButtonRef.current?.resumeListening();
+      // }
+    }
+  };
 
-  //     localStorage.setItem("conversation_uid", conversationData.uid);
+  const { amplitude, start, stop, pauseListening, resumeListening, isReady } =
+    useRecordAndSTTForContinuous({
+      uploadAudioFn,
+      // onTranscription,
+      // onError,
+      initPlayer,
+      startOnLoad: false,
+    });
 
-  //     startSession(data.stream_token, data.token, star.uid);
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const handleEndSession = async () => {
+    pause();
+    stop();
+    setIsSessionActive(false);
+  };
 
-  // const uploadAudioFn = async (audioBlob) => {
-  //   setIsLoading(true);
-  //   sessionButtonRef.current?.pauseListening();
-  //   const token = localStorage.getItem("token");
+  const handleStartSession = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post("/api/avatara-apis/get-access-token", {
+        remote_id: "maz-playground-remote-id",
+      });
 
-  //   try {
-  //     const formData = new FormData();
+      const data = await response.data;
 
-  //     formData.append("audio", audioBlob);
+      console.log(response.data);
 
-  //     const response = await fetch("/api/avatara-apis/stt", {
-  //       method: "POST",
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       body: formData,
-  //     });
+      if (!data.stream_token || !data.token) {
+        throw new Error("Invalid token response");
+      }
 
-  //     if (!response.ok) {
-  //       throw new Error(`Error: ${response.status} ${response.statusText}`);
-  //     }
+      localStorage.setItem("stream_token", data.stream_token);
+      localStorage.setItem("token", data.token);
 
-  //     const result = await response.json();
+      const conversationResponse = await axios.get(
+        `/api/avatara-apis/get-conversation?star_uid=${star.uid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        }
+      );
 
-  //     const conversationUid = localStorage.getItem("conversation_uid");
+      // if (!conversationResponse.ok) {
+      //   throw new Error(
+      //     `Error: ${conversationResponse.status} ${conversationResponse.statusText}`
+      //   );
+      // }
 
-  //     const chatResponse = await fetch("/api/avatara-apis/chat", {
-  //       method: "POST",
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       body: JSON.stringify({
-  //         conversation_uid: conversationUid,
-  //         message: result.transcript,
-  //       }),
-  //     });
+      const conversationData = await conversationResponse.data;
 
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       {
-  //         id: new Date().getTime(),
-  //         role: "user",
-  //         content: result.transcript,
-  //       },
-  //     ]);
+      if (!conversationData || !conversationData.uid) {
+        throw new Error("Invalid conversation data");
+      }
 
-  //     return await chatResponse.json();
-  //   } catch (error) {
-  //     sessionButtonRef.current?.resumeListening();
-  //     console.error("Error during STT request:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //     if (enableInterrupt) {
-  //       sessionButtonRef.current?.resumeListening();
-  //     }
-  //   }
-  // };
+      localStorage.setItem("conversation_uid", conversationData.uid);
 
-  // const disabled = useMemo(() => {
-  //   const _disabled = isLoading || isLoadingSession || isMuted;
+      setIsSessionActive(true);
+      start();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  //   return enableInterrupt
-  //     ? _disabled
-  //     : _disabled || isLoadingSpeak || isAvatarTalking;
-  // }, [
-  //   enableInterrupt,
-  //   isAvatarTalking,
-  //   isLoading,
-  //   isLoadingSession,
-  //   isLoadingSpeak,
-  //   isMuted,
-  // ]);
+  const disabled = useMemo(() => {
+    const _disabled = isLoading;
+
+    return enableInterrupt ? _disabled : _disabled || isSpeakLoading;
+  }, [enableInterrupt, isLoading, isSpeakLoading]);
+
+  useEffect(() => {
+    handleEndSession();
+  }, [enableInterrupt, interaction]);
 
   // useEffect(() => {
-  //   endSession();
-  // }, [interaction, enableInterrupt, enableText, endSession]);
+  //   handleStartSession();
+  // }, []);
 
   return (
     <>
       <StreamPlayer
-        // containerClassName="w-full h-full" // default
-        // containerStyle={{ <= example of containerStyle
-        //   height: '640px',
-        //   width: '360px',
-        //   backgroundColor: 'white',
-        // }}
+        // containerClassName="w-[640px] h-[360px]" // default
+        containerStyle={{ width: "100%", height: "100%" }}
         isTalking={isAvatarTalking}
         streamRefs={streamRefs}
-        onLoadStart={() => onStreamStatusUpdate(false)}
-        onLoadedData={() => onStreamStatusUpdate(true)}
+        onLoadStart={() => console.log("load")}
+        onLoadedData={() => console.log("done")}
       />
-
-      <ContinuousSessionButton
-        // ref={sessionButtonRef}
-        // endSession={handleEndSession}
-        initPlayer={initPlayer}
-        isLoading={isLoading || isSpeakLoading}
-        // isSessionActive={isSessionActive}
-        // startSession={handleStartSession}
-        // uploadAudioFn={uploadAudioFn}
-        // onTranscription={speak}
-      />
+      <div className="absolute bottom-0 w-full bg-white flex flex-col justify-center p-4 pt-7 gap-2 py-7 rounded-t-2xl z-50">
+        <button
+          onClick={() => handleStartSession()}
+          style={{
+            background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
+          }}
+          className="w-full flex flex-row items-center h-[40px] justify-center px-6 text-white text-[14px] gap-3 font-bold rounded-full"
+        >
+          <p>Bicara</p>
+          <Image
+            src={"/icons/icon-microphone.png"}
+            alt="logo"
+            className="object-cover sm:block"
+            width={15}
+            height={15}
+          />
+        </button>
+        <p className="text-center text-xs text-[#718290]">
+          Microfon sudah siap dipakai
+        </p>
+        {/* <p className="text-center text-sm text-[#FF0025] font-semibold mt-2">
+          Sisa Waktu: {countdownTime}
+        </p> */}
+      </div>
+      {/* {interaction === 'continuous' ? (
+        <ContinuousSessionButton
+          ref={sessionButtonRef}
+          endSession={handleEndSession}
+          initPlayer={initPlayer}
+          isLoading={isLoading || isSpeakLoading}
+          isSessionActive={isSessionActive}
+          startSession={handleStartSession}
+          uploadAudioFn={uploadAudioFn}
+          // onTranscription={speak}
+        />
+      ) : (
+        <HoldSpeakButton
+          disabled={disabled}
+          endSession={handleEndSession}
+          initPlayer={initPlayer}
+          isLoading={isLoading || isSpeakLoading}
+          isSessionActive={isSessionActive}
+          startSession={handleStartSession}
+          uploadAudioFn={uploadAudioFn}
+          // onTranscription={speak}
+        />
+      )} */}
     </>
-    // <div className="relative flex h-full max-w-full flex-col items-center bg-black">
-    //   {/* <h1 className="invisible font-semibold sm:visible">{star.name}</h1> */}
-    //   {/* {stream ? ( */}
-    //   {/* <StreamPlayer
-    //     // containerClassName="w-full h-full" // default
-    //     // containerStyle={{ <= example of containerStyle
-    //     //   height: '640px',
-    //     //   width: '360px',
-    //     //   backgroundColor: 'white',
-    //     // }}
-    //     isTalking={isAvatarTalking}
-    //     streamRefs={streamRefs}
-    //     onLoadStart={() => alert("loading...")}
-    //     onLoadedData={() => alert("done")}
-    //   /> */}
-
-    //   {/* <ContinuousSessionButton
-    //     // ref={sessionButtonRef}
-    //     // endSession={handleEndSession}
-    //     initPlayer={initPlayer}
-    //     isLoading={isLoading || isSpeakLoading}
-    //     // isSessionActive={isSessionActive}
-    //     // startSession={handleStartSession}
-    //     // uploadAudioFn={uploadAudioFn}
-    //     // onTranscription={speak}
-    //   /> */}
-
-    //   {/* <button
-    //     className="bg-red-400 cursor-pointer z-[99999]"
-    //     onClick={() => handleStartSession()}
-    //   >
-    //     afknfassfas
-    //   </button> */}
-    //   {/* ) : (
-    //     <AvatarStreamPlaceholder src={star.banner_pic} />
-    //   )} */}
-    //   {/* {interaction === 'continuous' ? (
-    //     <ContinuousSessionButton
-    //       ref={sessionButtonRef}
-    //       endSession={handleEndSession}
-    //       isLoading={isLoading || isLoadingSession}
-    //       isSessionActive={!!stream}
-    //       startSession={handleStartSession}
-    //       uploadAudioFn={uploadAudioFn}
-    //       onTranscription={speak}
-    //     />
-    //   ) : (
-    //     <HoldSpeakButton
-    //       disabled={disabled}
-    //       endSession={handleEndSession}
-    //       isLoading={isLoading || isLoadingSession}
-    //       isSessionActive={!!stream}
-    //       startSession={handleStartSession}
-    //       uploadAudioFn={uploadAudioFn}
-    //       onTranscription={speak}
-    //     />
-    //   )} */}
-    // </div>
   );
 };
 

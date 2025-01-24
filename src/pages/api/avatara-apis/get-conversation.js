@@ -1,28 +1,31 @@
-// import { streamAvatarServer } from "@/lib/stream-avatar-server";
-// import { headers } from "next/headers";
+import { streamAvatarServer } from "@/lib/stream-avatar-server";
 
-// export async function POST(request) {
-//   try {
-//     const headersList = headers();
-//     const authorizationHeader = headersList.get("authorization");
+export default async function handler(req, res) {
+  // console.log("asdas", req.headers);
+  if (req.method === "GET") {
+    try {
+      const authorizationHeader = req.headers.authorization;
 
-//     if (!authorizationHeader) {
-//       return new Response("Unauthorized", { status: 401 });
-//     }
+      if (!authorizationHeader) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
 
-//     const token = authorizationHeader.replace(/^Bearer\s+/, "");
+      // Extract token from the authorization header
+      const token = authorizationHeader.replace(/^Bearer\s+/, "");
 
-//     const reqBody = await request.json();
-//     const starUID = reqBody.star_uid;
+      const { star_uid } = req.query; // For GET requests, use query parameters
 
-//     const uid = await streamAvatarServer.getConversationUID(starUID, token);
+      const uid = await streamAvatarServer.getConversationUID(star_uid, token);
 
-//     return Response.json({ uid });
-//   } catch (error) {
-//     console.error("Error retrieving access token:", error);
+      return res.status(200).json({ uid });
+    } catch (error) {
+      console.error("Error retrieving access token:", error);
 
-//     return new Response("Failed to retrieve access token", {
-//       status: 500,
-//     });
-//   }
-// }
+      return res
+        .status(500)
+        .json({ message: "Failed to retrieve access token" });
+    }
+  } else {
+    res.status(405).json({ message: "Method Not Allowed" });
+  }
+}

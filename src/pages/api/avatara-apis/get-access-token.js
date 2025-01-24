@@ -2,16 +2,20 @@ import { streamAvatarServer } from "@/lib/stream-avatar-server";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
+    // console.log(req.body);
     try {
       // Fetch the remote_id from req.body
       const { remote_id } = req.body;
 
       if (!remote_id) {
-        return res.status(400).json({ message: "remote_id is required" });
+        return res.status(400).json({ message: "remote_id 1 required" });
       }
 
       // Call the streamAvatarServer.getToken method with the remote_id
-      const tokenResponse = await streamAvatarServer.getToken({ remote_id });
+      const tokenResponse = await streamAvatarServer.getToken({
+        remote_id,
+        name: "Jane Doe",
+      });
       return res.status(200).json(tokenResponse);
     } catch (error) {
       console.error("Error in POST handler:", error);

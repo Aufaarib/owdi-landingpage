@@ -13,7 +13,7 @@ const nextConfig = {
       },
     ],
   },
-  reactStrictMode: true,
+  // reactStrictMode: true,
   redirects() {
     return [
       // Basic redirect

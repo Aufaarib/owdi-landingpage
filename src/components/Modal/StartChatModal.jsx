@@ -14,6 +14,7 @@ const StartChatModal = () => {
     const updated_coin = remaining_coin - 1;
 
     localStorage.setItem("remainingCoin", updated_coin);
+    // router.push(`/bicara/${uid}`);
     router.push(`/bicara/${uid}`);
     Swal.close();
     // window.location.href = `/bicara/${uid}`;

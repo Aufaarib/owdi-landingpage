@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-
 const OTPModal = () => {
   const { openFormProfileModal } = FormProfileModal();
   const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -171,24 +170,23 @@ const OTPModal = () => {
             const dumyOTP = 123456;
             const dumyToken = "dummy-token";
 
-            if (parseInt(otpGet) === dumyOTP) {
-              localStorage.setItem("nomor", nomor);
-              localStorage.setItem("fullname", "Name User");
-              Cookies.set("access_token", dumyToken);
-              router.push("/choose-character");
-              openFormProfileModal(nomor);
-              return;
-            } else {
-
-              Swal.fire(
-                "Invalid OTP",
-                "Kode OTP yang Anda masukkan salah. Silakan coba lagi.",
-                "error"
-              ).then(() => {
-                openOTPModal(nomor);
-              });
-              return;
-            }
+            // if (parseInt(otpGet) === dumyOTP) {
+            //   localStorage.setItem("nomor", nomor);
+            //   localStorage.setItem("fullname", "Name User");
+            //   Cookies.set("access_token", dumyToken);
+            //   router.push("/choose-character");
+            //   openFormProfileModal(nomor);
+            //   return;
+            // } else {
+            //   Swal.fire(
+            //     "Invalid OTP",
+            //     "Kode OTP yang Anda masukkan salah. Silakan coba lagi.",
+            //     "error"
+            //   ).then(() => {
+            //     openOTPModal(nomor);
+            //   });
+            //   return;
+            // }
 
             try {
               const response = await axios.post(

@@ -1,4 +1,4 @@
-import { IconX } from "@tabler/icons-react";
+import { IconProgress, IconX } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
@@ -112,24 +112,25 @@ const Bicara = () => {
   useEffect(() => {
     const fetchStar = async (uid) => {
       const response = await fetch(
-        `/api/avatara-apis/get-characters?id=${uid}`
+        `/api/avatara-apis/get-characters?id=2ppiObWYvS3sZScI7uLitb1LtHj`
       );
       const data = await response.json();
 
       setStar(data);
     };
 
-    if (!char_uid) return;
+    // if (!char_uid) return;
 
     fetchStar(char_uid);
-  }, [char_uid]);
+  }, []);
 
-  console.log(char_uid);
+  console.log(star);
+  // console.log(char_uid);
   // console.log(countdownTime);
 
   return (
     <div>
-      <div className="absolute w-full flex items-center h-[45px] pt-5 bg-transparent">
+      <div className="w-full flex items-center h-[45px] pt-5 bg-transparent">
         <button
           onClick={buttonClose}
           className="absolute left-4 bg-gray-400 px-3 py-1 rounded-full text-white"
@@ -156,40 +157,26 @@ const Bicara = () => {
         </button>
       </div>
 
-      <AvatarStreamer
-        enableInterrupt={false}
-        // enableText={settings.text === 'enabled'}
-        interaction={"continuous"}
-        star={star}
-        onStreamStatusUpdate={setIsStreamReady}
-      />
+      {/* {!isStreamReady && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+          <IconProgress className="h-12 w-12 animate-spin" />
+        </div>
+      )} */}
+
+      {star && (
+        <div className="bg-black h-[700px] mt-10">
+          <AvatarStreamer
+            enableInterrupt={true}
+            // enableInterrupt={settings.interrupt === 'enabled'}
+            // enableText={settings.text === 'enabled'}
+            interaction={"hold_to_speak"}
+            star={star}
+            // onStreamStatusUpdate={setIsStreamReady}
+          />
+        </div>
+      )}
 
       {/* <Image src={star?.banner_pic} alt="err" width={120} height={120} /> */}
-
-      <div className="absolute bottom-0 w-full bg-white flex flex-col justify-center p-4 gap-2 py-7 rounded-t-2xl">
-        <button
-          // onClick={() => onStartSession()}
-          style={{
-            background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
-          }}
-          className="w-full flex flex-row items-center h-[40px] justify-center px-6 text-white text-[14px] gap-3 font-bold rounded-full"
-        >
-          <p>Bicara</p>
-          <Image
-            src={"/icons/icon-microphone.png"}
-            alt="logo"
-            className="object-cover sm:block"
-            width={15}
-            height={15}
-          />
-        </button>
-        <p className="text-center text-xs text-[#718290]">
-          Microfon sudah siap dipakai
-        </p>
-        {/* <p className="text-center text-sm text-[#FF0025] font-semibold mt-2">
-          Sisa Waktu: {countdownTime}
-        </p> */}
-      </div>
     </div>
   );
 };

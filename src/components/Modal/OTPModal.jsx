@@ -43,9 +43,9 @@ const OTPModal = () => {
 
                 <div class="w-full flex justify-center gap-2 mb-4">
                     ${new Array(6)
-                      .fill("")
-                      .map(
-                        (_, index) => `
+          .fill("")
+          .map(
+            (_, index) => `
                         <input 
                           type="number" 
                           maxlength="1" 
@@ -53,8 +53,8 @@ const OTPModal = () => {
                           id="otp-${index}" 
                         />
                       `
-                      )
-                      .join("")}
+          )
+          .join("")}
                 </div>
                 <div className="w-full flex justify-center items-center">
                     <button id="resend-otp" class="text-sm font-medium mb-4 font-semibold text-[#0050AE] hidden">

@@ -2,9 +2,10 @@ import LoginModal from "@/components/Modal/LoginModal";
 import PaymentConfirmModal from "@/components/Modal/PaymentConfirmModal";
 import TopupModal from "@/components/Modal/TopupModal";
 import { IconArrowLeft, IconMicrophone } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const ButtonCategory = ({ setIsOpenCategory }) => {
+
   return (
     <button
       onClick={() => setIsOpenCategory(true)}
@@ -249,6 +250,39 @@ export default function Home() {
   const { openPaymentConfirmModal } = PaymentConfirmModal();
   const { openLoginModal } = LoginModal();
 
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    console.log("videoElement:", videoElement);
+
+    if (videoElement) {
+      // Set atribut untuk mendukung autoplay
+      videoElement.muted = true;
+      videoElement.playsInline = true; // Untuk mendukung autoplay di perangkat iOS
+      videoElement.setAttribute("autoplay", "true");
+
+      // Memulai video secara manual
+      const playPromise = videoElement.play();
+
+      playPromise
+        .then(() => {
+          console.log("Autoplay successful, attempting to unmute...");
+          setTimeout(() => {
+            // Coba unmute jika browser mengizinkan
+            videoElement.muted = false;
+            console.log("Video unmuted successfully");
+          }, 500); // Beri jeda sebelum menghapus mute
+        })
+        .catch((error) => {
+          console.error("Autoplay failed. Keeping video muted:", error);
+          // Biarkan video tetap mute jika autoplay gagal
+          videoElement.muted = true;
+        });
+    }
+  }, []);
+
+
   // useEffect(() => {
   //   return openTopupModal;
   // }, []);
@@ -277,12 +311,42 @@ export default function Home() {
             src={`/img/Talk (1).png`}
             alt="err"
           />
-          <img
-            className={`w-[330px] md:mr-[20px] md:mt-[60px] ${!isOpenCategory && "mr-[20px] mt-[140px]"
+          {/* <video
+            ref={videoRef}
+            loop
+            style={{ maxWidth: "100%", height: "auto" }}
+            className={`w-[330px] md:mr-[20px] md:mt-[60px] ${!isOpenCategory && " mt-[140px]"
               }`}
-            src={`/img/Models.png`}
-            alt="err"
-          />
+          >
+            <source
+              src="https://avatara-whitelabel-assets.s3.ap-southeast-3.amazonaws.com/tenants/ekraf/stars/2ppiObWYvS3sZScI7uLitb1LtHj/idle.mp4"
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video> */}
+
+          <video
+            // ref={videoRef}
+            autoplay
+            style={{ maxWidth: "100%", height: "auto" }}
+            className={`w-[330px] md:mr-[20px] md:mt-[60px] ${!isOpenCategory && " mt-[140px]"
+              }`}
+          >
+            <source
+              src="/video/idle.mp4"
+              type="video/mp4"
+            />
+            Your browser does not support the video tag.
+          </video>
+
+          <video
+            controls
+            autoplay>
+            <source src="/video/idle.mp4" type="video/mp4" />
+          </video>
+
+
+
           {/* desktop bubble */}
           <img
             className="hidden sm:block h-36 mb-16"

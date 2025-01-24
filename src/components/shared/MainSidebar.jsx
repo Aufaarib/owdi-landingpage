@@ -12,6 +12,7 @@ import LogoutModal from "../Modal/LogoutConfirmModal";
 import StartChatModal from "../Modal/StartChatModal";
 import NotEnoughCoinModal from "../Modal/NotEnoughCoinModal";
 import PeymentMethodModal from "../Modal/PeymentMethodModal";
+import FormProfileUpdateModal from "../Modal/FormProfileUpdateModal";
 
 const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const { openLogoutModal } = LogoutModal();
   const { openStartChatModal } = StartChatModal();
   const { openNotEnoughCoinModal } = NotEnoughCoinModal();
+  const { FormProfileUpdateMDL } = FormProfileUpdateModal();
   const coinLeft = 0;
 
   useEffect(() => {
@@ -234,6 +236,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
 
             <div className="flex flex-row gap-7">
               <svg
+                onClick={() => FormProfileUpdateMDL()}
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"

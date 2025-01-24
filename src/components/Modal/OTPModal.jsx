@@ -171,24 +171,24 @@ const OTPModal = () => {
             const dumyOTP = 123456;
             const dumyToken = "dummy-token";
 
-            // if (parseInt(otpGet) === dumyOTP) {
-            //   localStorage.setItem("nomor", nomor);
-            //   localStorage.setItem("fullname", "Name User");
-            //   Cookies.set("access_token", dumyToken);
-            //   router.push("/choose-character");
-            //   openFormProfileModal(nomor);
-            //   return;
-            // } else {
+            if (parseInt(otpGet) === dumyOTP) {
+              localStorage.setItem("nomor", nomor);
+              localStorage.setItem("fullname", "Name User");
+              Cookies.set("access_token", dumyToken);
+              router.push("/choose-character");
+              openFormProfileModal(nomor);
+              return;
+            } else {
 
-            //   Swal.fire(
-            //     "Invalid OTP",
-            //     "Kode OTP yang Anda masukkan salah. Silakan coba lagi.",
-            //     "error"
-            //   ).then(() => {
-            //     openOTPModal(nomor);
-            //   });
-            //   return;
-            // }
+              Swal.fire(
+                "Invalid OTP",
+                "Kode OTP yang Anda masukkan salah. Silakan coba lagi.",
+                "error"
+              ).then(() => {
+                openOTPModal(nomor);
+              });
+              return;
+            }
 
             try {
               const response = await axios.post(

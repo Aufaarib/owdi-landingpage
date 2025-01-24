@@ -4,10 +4,12 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import OTPModal from "./OTPModal";
 import axios from "axios";
+import NumberNotAllowedModal from "./Alert/NumberNotAllowedModal";
 
 const LoginModal = () => {
   const router = useRouter();
   const { openOTPModal } = OTPModal();
+  const { NumberNotAllowedMDL } = NumberNotAllowedModal();
 
   const openLoginModal = async () => {
     Swal.fire({
@@ -75,14 +77,18 @@ const LoginModal = () => {
                 }
               );
 
-              console.log("Response:", response.data);
+
 
               openOTPModal(nomor);
             } catch (error) {
-              console.log("error", error);
+              if (error.response.data.code === 404 && error.response.data.error === "User not found with provided phone number") {
+                // NumberNotAllowedMDL(nomor);
+                openOTPModal(nomor);
+
+              }
             }
 
-            return openOTPModal(nomor);
+            // return openOTPModal(nomor);
           } else {
             Swal.fire({
               icon: "error",

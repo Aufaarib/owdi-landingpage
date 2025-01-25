@@ -1,9 +1,9 @@
 import ReactDOM from "react-dom";
 import Swal from "sweetalert2";
-import TopupModal from "./TopupModal";
 import { IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import TopUpMDL from "./TopUpMDL";
 
 const StartChatModal = () => {
   const router = useRouter();
@@ -21,7 +21,7 @@ const StartChatModal = () => {
   };
 
   const SwalContent = () => {
-    const { openTopupModal } = TopupModal();
+    const { openTopUpMDL } = TopUpMDL();
     return (
       <div class="w-full p-4 py-4 z-50 h-full justify-between items-center flex flex-col gap-3">
         <p class="m-0 absolute right-0 top-0 p-3 cursor-pointer">

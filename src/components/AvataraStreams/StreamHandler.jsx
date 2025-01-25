@@ -44,6 +44,7 @@ const StreamHandler = ({
     try {
       const conversation_uid = localStorage.getItem("conversation_uid");
 
+
       if (!conversation_uid) {
         throw new Error("Conversation UID not found");
       }
@@ -53,14 +54,13 @@ const StreamHandler = ({
         throw new Error("Token not found");
       }
 
-      console.log(audioBlob);
 
       const formData = new FormData();
 
       formData.append("conversation_uid", conversation_uid || "");
       formData.append("audio", audioBlob);
 
-      const response = await fetch("/api/avatara-apis/post-sts", {
+      const response = await fetch("/api/avatara-apis/test-sts", {
         method: "POST",
         body: formData,
         headers: {
@@ -68,25 +68,15 @@ const StreamHandler = ({
         },
       });
 
-      // if (!response.ok) {
-      //   throw new Error("Failed to upload audio");
-      // }
-
-      console.log(response);
 
       await speak(response);
 
       return "";
     } catch (error) {
-      // console.error("Error during STS request:", error);
       throw new Error("Failed to get transcription");
     } finally {
       setIsLoading(false);
-      // only resume listening if enableInterrupt is true
-      // otherwise, the button will be disabled until finish talking
-      // if (enableInterrupt) {
-      //   sessionButtonRef.current?.resumeListening();
-      // }
+
     }
   };
 

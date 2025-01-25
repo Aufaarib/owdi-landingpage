@@ -194,6 +194,7 @@ const OTPModal = () => {
                 {
                   phone_number: nomor,
                   code: otpGet,
+                  flag: "login",
                 },
                 {
                   headers: {

@@ -4,6 +4,7 @@ import formatRupiah from "@/utils/formatRupiah";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PeymentMethodModal from "./PeymentMethodModal";
+import Cookies from "js-cookie";
 
 const MySwal = withReactContent(Swal);
 
@@ -11,21 +12,30 @@ const TopUp = () => {
   const [subscription, setSubscription] = useState([]); // Untuk menyimpan data dari API
   const [selectSubscription, setSelectSubscription] = useState(null); // Untuk menyimpan pilihan user
   const { openFormPeymentMethod } = PeymentMethodModal();
+  const token = Cookies.get("access_token");
 
   useEffect(() => {
     const fetchSubscription = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/subscription/all`
-        );
-        setSubscription(response.data.body); // Simpan data dari API ke state
-      } catch (error) {
-        console.error("Error fetching subscription data:", error.message);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Gagal memuat data top-up. Silakan coba lagi nanti.",
-        });
+      if (token) {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/pricing/all`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+              },
+            }
+          );
+          setSubscription(response.data.body); // Simpan data dari API ke state
+        } catch (error) {
+          console.error("Error fetching subscription data:", error.message);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Gagal memuat data top-up. Silakan coba lagi nanti.",
+          });
+        }
       }
     };
 
@@ -40,14 +50,14 @@ const TopUp = () => {
   };
 
   return (
-    <div class="w-full bg-white rounded-lg rounded-br-none z-50 h-full flex flex-col gap-5">
-      <div class="grid grid-cols-2 items-center  w-full">
+    <div class="w-full bg-white rounded-lg rounded-br-none z-50 h-full flex flex-col gap-5 justify-center">
+      <div class="grid grid-cols-2 items-center   w-full">
         <img src="/img/TopUpModel.png" class="w-[200px]" alt="logo" />
         <h2 class="text-3xl font-normal max-w-32 text-left">Top Up Koin</h2>
       </div>
-      <div className="grid grid-cols-2 gap-2 items-center w-full">
+      <div className="grid grid-cols-2 gap-2 items-center w-full ">
         {subscription.map((item) => (
-          <div key={item.id}>
+          <div key={item.id} className="flex justify-center items-center m-2">
             <input
               type="radio"
               name="index"
@@ -86,11 +96,10 @@ const TopUp = () => {
       <button
         onClick={handleSubmit}
         disabled={!selectSubscription}
-        className={`w-full ${
-          !selectSubscription
-            ? "bg-[#D1D3DB] text-[#97A6B1]"
-            : "bg-gradient-to-t from-[#EF2328] to-[#FB942B] text-white"
-        }  py-2 rounded-lg hover:opacity-90 focus:outline-none`}
+        className={`w-full ${!selectSubscription
+          ? "bg-[#D1D3DB] text-[#97A6B1]"
+          : "bg-gradient-to-t from-[#EF2328] to-[#FB942B] text-white"
+          }  py-2 rounded-lg hover:opacity-90 focus:outline-none`}
       >
         Beli
       </button>

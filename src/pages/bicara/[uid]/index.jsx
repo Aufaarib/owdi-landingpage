@@ -43,7 +43,7 @@ const Bicara = () => {
     fetchStar(char_uid);
   }, []);
 
-  console.log(star);
+  // console.log(star);
   // console.log(char_uid);
   // console.log(countdownTime);
 

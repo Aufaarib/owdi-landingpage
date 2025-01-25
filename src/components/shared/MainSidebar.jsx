@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { IconArticle, IconChevronRight, IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
-import TopupModal from "../Modal/TopupModal";
 import PaymentConfirmModal from "../Modal/PaymentConfirmModal";
 import { useRouter } from "next/router";
 import formatRupiah from "@/utils/formatRupiah";
@@ -13,11 +12,14 @@ import StartChatModal from "../Modal/StartChatModal";
 import NotEnoughCoinModal from "../Modal/NotEnoughCoinModal";
 import PeymentMethodModal from "../Modal/PeymentMethodModal";
 import FormProfileUpdateModal from "../Modal/FormProfileUpdateModal";
+import TopUpMDL from "../Modal/TopUpMDL";
+import { useCoin } from "@/context/CoinContext";
 
 const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
+  const { coin } = useCoin();
   const router = useRouter();
   const { openFormPeymentMethod } = PeymentMethodModal();
-  const { openTopupModal } = TopupModal();
+  const { openTopUpMDL } = TopUpMDL();
   const { openPaymentConfirmModal } = PaymentConfirmModal();
   const [remainingCoin, setRemainingCoin] = useState(0);
   const [sessionData, setSessionData] = useState([]);
@@ -26,7 +28,9 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   const { openStartChatModal } = StartChatModal();
   const { openNotEnoughCoinModal } = NotEnoughCoinModal();
   const { FormProfileUpdateMDL } = FormProfileUpdateModal();
-  const coinLeft = 0;
+  const coinLeft = coin.coin_amount;
+  const token = Cookies.get("access_token");
+
 
   useEffect(() => {
     axios
@@ -40,22 +44,35 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/subscription/all`) // Mengakses endpoint API
-      .then((response) => {
-        console.log("subscriptionData", response.data.body);
+    const fetchSubscription = async () => {
+      if (token) {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/pricing/all`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setSubscriptionData(response.data.body);
+        } catch (error) {
+          console.error("Error fetching subscription data:", error);
+        }
+      }
+    }
 
-        setSubscriptionData(response.data.body);
-      })
-      .catch((error) => {
-        console.error("Error fetching session data:", error);
-      });
+    fetchSubscription();
+
   }, []);
+
+
 
   useEffect(() => {
     // Sinkronisasi data setiap 1 detik
     const interval = setInterval(() => {
-      setRemainingCoin(localStorage.getItem("remainingCoin"));
+      // setRemainingCoin(localStorage.getItem("remainingCoin"));
+      setRemainingCoin(coin.coin_amount);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -103,7 +120,7 @@ const MainSidebar = ({ openSidebar, setOpenSidebar }) => {
                 />
               </div>
               <button
-                onClick={openTopupModal}
+                onClick={openTopUpMDL}
                 style={{
                   background:
                     "linear-gradient(270deg, rgba(0, 26, 65, 0.75) 26.26%, #EADAD3 99.74%)",

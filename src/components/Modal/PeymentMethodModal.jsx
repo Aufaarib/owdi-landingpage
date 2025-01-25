@@ -38,21 +38,28 @@ const PeymentMethod = ({ codeSubscription }) => {
 
     useEffect(() => {
         const fetchProductData = async () => {
-            if (codeSubscription) {
-                try {
-                    const response = await axios.get(
-                        `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/subscription/code/${codeSubscription}`
-                    );
-                    setProduk(response.data.body);
-                    console.log("produk", response.data.body);
+            if (token) {
+                if (codeSubscription) {
+                    try {
+                        const response = await axios.get(
+                            `${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/pricing/code/${codeSubscription}`, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`,
+                            },
+                        }
+                        );
+                        setProduk(response.data.body);
+                        console.log("produk", response.data.body);
 
-                } catch (error) {
-                    console.error("Error fetching product:", error);
-                } finally {
+                    } catch (error) {
+                        console.error("Error fetching product:", error);
+                    } finally {
+                        setProdukLoading(false);
+                    }
+                } else {
                     setProdukLoading(false);
                 }
-            } else {
-                setProdukLoading(false);
             }
         };
 

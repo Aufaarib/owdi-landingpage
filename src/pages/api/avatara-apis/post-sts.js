@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         newFormData.append("audio", blob);
       }
 
-      console.log("FORM", newFormData);
+      // console.log("FORM", newFormData);
 
       const response = await streamAvatarServer.stsWithTransript(
         newFormData,
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
         );
       }
 
-      console.log(response);
+      // console.log(response);
 
       const reader = response.stream.getReader();
 
@@ -75,8 +75,8 @@ export default async function handler(req, res) {
         },
       });
 
-      console.log("header", response.headers.get("Content-Type"));
-      console.log("stream", stream);
+      // console.log("header", response.headers.get("Content-Type"));
+      // console.log("stream", stream);
 
       res.setHeader(
         "Content-Type",

@@ -57,7 +57,7 @@ const LoginModal = () => {
           if (nomor.startsWith("0")) {
             nomor = nomor.substring(1);
           }
-          nomor = "+62" + nomor;
+          nomor = "62" + nomor;
 
           // // Dummy data untuk login
           // const dummyUsername = "userowdi";

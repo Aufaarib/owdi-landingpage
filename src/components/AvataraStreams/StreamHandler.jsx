@@ -5,11 +5,9 @@ import {
   useAvatarStream,
   useRecordAndSTTForContinuous,
 } from "@avatara/avatar-stream";
-import Cookies from "js-cookie";
-import { useEffect, useMemo, useState } from "react";
-import ContinuousSessionButton from "./ContinuousSessionButton";
 import axios from "axios";
 import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 
 // import { ContinuousSessionButtonRef } from "./buttons/ContinuousButton";
 const StreamHandler = ({
@@ -22,6 +20,7 @@ const StreamHandler = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const [messages, setMessages] = useState([]);
 
   const {
     streamRefs,
@@ -53,13 +52,16 @@ const StreamHandler = ({
         throw new Error("Token not found");
       }
 
-      console.log(audioBlob);
-
       const formData = new FormData();
 
       formData.append("conversation_uid", conversation_uid || "");
       formData.append("audio", audioBlob);
 
+      console.log(audioBlob);
+      console.log(formData.get("audio"));
+      console.log(formData.get("conversation_uid"));
+
+      // if (formData) {
       const response = await fetch("/api/avatara-apis/post-sts", {
         method: "POST",
         body: formData,
@@ -67,15 +69,15 @@ const StreamHandler = ({
           Authorization: `Bearer ${token}`,
         },
       });
-
-      // if (!response.ok) {
-      //   throw new Error("Failed to upload audio");
-      // }
+      if (!response.ok) {
+        throw new Error("Failed to upload audio");
+      }
 
       console.log(response);
 
-      await speak(response);
-
+      await speak(response, (texStream) => {
+        setMessages((prev) => [...prev, texStream]);
+      });
       return "";
     } catch (error) {
       // console.error("Error during STS request:", error);
@@ -90,11 +92,15 @@ const StreamHandler = ({
     }
   };
 
+  const onError = () => {
+    console.log("EROOOORRR");
+  };
+
   const { amplitude, start, stop, pauseListening, resumeListening, isReady } =
     useRecordAndSTTForContinuous({
       uploadAudioFn,
       // onTranscription,
-      // onError,
+      onError,
       initPlayer,
       startOnLoad: false,
     });

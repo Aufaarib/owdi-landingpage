@@ -1,10 +1,12 @@
 import NotEnoughCoinModal from "@/components/Modal/NotEnoughCoinModal";
 import StartChatModal from "@/components/Modal/StartChatModal";
+import { useCoin } from "@/context/CoinContext";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function ChooseCharacter() {
+  const { coin } = useCoin();
   const { openNotEnoughCoinModal } = NotEnoughCoinModal();
   const [stars, setStars] = useState([]);
   const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0);
@@ -52,7 +54,8 @@ export default function ChooseCharacter() {
   const currentCharacter = stars[currentCharacterIndex];
 
   const onStartSession = () => {
-    const coinLeft = parseInt(localStorage.getItem("remainingCoin"));
+    const coinLeft = coin.coin_amount;
+    // const coinLeft = parseInt(localStorage.getItem("remainingCoin"));
 
     if (coinLeft > 0) {
       openStartChatModal();
@@ -102,11 +105,10 @@ export default function ChooseCharacter() {
           {/*  */}
           {/* Unselected Chars */}
           <div
-            className={`flex flex-row w-full ${
-              currentCharacterIndex + 1 == stars.length
-                ? "justify-start"
-                : "justify-end"
-            } left-0 absolute bottom-0 right-0 pb-40 overflow-auto`}
+            className={`flex flex-row w-full ${currentCharacterIndex + 1 == stars.length
+              ? "justify-start"
+              : "justify-end"
+              } left-0 absolute bottom-0 right-0 pb-40 overflow-auto`}
           >
             {unSelectedChars
               .filter((val) => val?.name !== undefined)

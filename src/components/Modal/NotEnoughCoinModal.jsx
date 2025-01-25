@@ -2,10 +2,10 @@ import { IconArrowLeft, IconX } from "@tabler/icons-react";
 import ReactDOM from "react-dom";
 import Swal from "sweetalert2";
 import FormProfileModal from "./FormProfileModal";
-import TopupModal from "./TopupModal";
+import TopUpMDL from "./TopUpMDL";
 
 const SwalContent = () => {
-  const { openTopupModal } = TopupModal();
+  const { openTopUpMDL } = TopUpMDL
   return (
     <div className="w-full bg-white rounded-[20px] p-4 z-50 flex flex-col gap-5">
       <div className="flex flex-row w-full justify-between">
@@ -17,7 +17,7 @@ const SwalContent = () => {
         <p className="font-bold">Kamu tidak mempunyai Koin</p>
       </div>
       <button
-        onClick={() => openTopupModal()}
+        onClick={() => TopUpMDL()}
         style={{
           background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
         }}

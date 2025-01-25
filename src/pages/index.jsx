@@ -1,6 +1,6 @@
 import LoginModal from "@/components/Modal/LoginModal";
 import PaymentConfirmModal from "@/components/Modal/PaymentConfirmModal";
-import TopupModal from "@/components/Modal/TopupModal";
+import TopUpMDL from "@/components/Modal/TopUpMDL";
 import { IconArrowLeft, IconMicrophone } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -246,7 +246,7 @@ const PickedCategoriesSection = ({ setIsOpenCategory, openLoginModal }) => {
 
 export default function Home() {
   const [isOpenCategory, setIsOpenCategory] = useState(false);
-  const { openTopupModal } = TopupModal();
+  const { openTopUpMDL } = TopUpMDL();
   const { openPaymentConfirmModal } = PaymentConfirmModal();
   const { openLoginModal } = LoginModal();
 
@@ -284,7 +284,7 @@ export default function Home() {
 
 
   // useEffect(() => {
-  //   return openTopupModal;
+  //   return TopUpMDL;
   // }, []);
 
   return (
@@ -325,7 +325,7 @@ export default function Home() {
             Your browser does not support the video tag.
           </video> */}
 
-          <video
+          {/* <video
             // ref={videoRef}
             autoplay
             style={{ maxWidth: "100%", height: "auto" }}
@@ -337,7 +337,7 @@ export default function Home() {
               type="video/mp4"
             />
             Your browser does not support the video tag.
-          </video>
+          </video> */}
 
           <video
             controls

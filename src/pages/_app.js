@@ -1,21 +1,15 @@
 import MainLayout from "@/layout-provider/MainLayout";
 import "@/styles/globals.css";
+import ContextManager from "@/context/ContextManager";
+
 
 export default function App({ Component, pageProps }) {
-  // if (screenWidth > 700) {
-  //   console.log("moree");
-  //   return (
-  //     <DesktopLayout>
-  //       <Component {...pageProps} />
-  //     </DesktopLayout>
-  //   );
-  // }
 
   return (
-    // <AppStateProvider>
-    <MainLayout>
-      <Component {...pageProps} />
-    </MainLayout>
-    // </AppStateProvider>
+    <ContextManager>
+      <MainLayout>
+        <Component {...pageProps} />
+      </MainLayout>
+    </ContextManager>
   );
 }

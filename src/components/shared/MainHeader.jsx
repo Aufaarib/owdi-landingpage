@@ -3,16 +3,16 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import LoginModal from "../Modal/LoginModal";
 import moment from "moment";
-import TopupModal from "../Modal/TopupModal";
 import Cookies from "js-cookie";
+import { useCoin } from "@/context/CoinContext";
 import TopUpMDL from "../Modal/TopUpMDL";
 
 const MainHeader = ({ openSidebar, setOpenSidebar }) => {
   const [nomor, setnomor] = useState("");
   const [remainingCoin, setRemainingCoin] = useState(0);
   const { openLoginModal } = LoginModal();
-  const { openTopupModal } = TopupModal();
   const { openTopUpMDL } = TopUpMDL();
+  const { coin } = useCoin();
 
   const handleLogin = async () => {
     openLoginModal();
@@ -26,7 +26,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
 
     if (logedIn) {
       setnomor(storedNumber);
-      setRemainingCoin(storedCoin);
+      setRemainingCoin(coin.coin_amount);
     }
 
     // if (storedTime) {
@@ -107,7 +107,7 @@ const MainHeader = ({ openSidebar, setOpenSidebar }) => {
             height={20}
           />
           <p className="font-semibold text-[18px] mb-0.5">
-            {`${remainingCoin || 0} Koin`}
+            {`${coin.coin_amount || 0} Koin`}
           </p>
           <IconPlus size={24} />
         </button>

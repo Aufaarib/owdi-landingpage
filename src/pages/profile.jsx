@@ -1,29 +1,19 @@
+
+import { useProfile } from "@/context/ProfileContext";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 
-const profile = (profile) => {
-    const token = Cookies.get("access_token");
+const profile = () => {
+    const { profile } = useProfile();
 
-    useEffect(() => {
-        if (!token) {
-            console.log("Token not found");
-        } else {
-            axios
-                .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}api/v1/auth/profile/fetch`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
-                .then((response) => {
-                    console.log("profile", response.data.body);
-                })
-                .catch((error) => {
-                    console.log("Error fetching profile:", error);
+    if (!profile) {
+        return <p>Loading profile...</p>;
+    }
 
-                });
-        }
-    }, []);
+    console.log('data dari context', profile);
+
+
 
     return (
         <div>

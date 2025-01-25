@@ -57,33 +57,32 @@ const TopupModal = () => {
                         </div>
                         <div class="flex gap-5 flex-row">
                           ${denom
-                            .filter((val) => !val.promo)
-                            .map(
-                              (i, index) =>
-                                `
+          .filter((val) => !val.promo)
+          .map(
+            (i, index) =>
+              `
                                     <button 
                                       data-id="${i.id}" 
                                       data-time="${i.time}" 
                                       data-price="${i.price}" 
                                       key=${index}
                                       class="denom-btn flex flex-col bg-[#fcf4ef] w-[50%] h-[130px] gap-2 items-start justify-center p-5 border-2 border-[#f9dec2] rounded-[16px]">
-                                      <p class="text-black font-bold text-[16px]">${
-                                        i.time
-                                      }</p>
+                                      <p class="text-black font-bold text-[16px]">${i.time
+              }</p>
                                       <p class="text-[#ED0226] font-bold text-[16px]">${formatRupiah(
-                                        i.price
-                                      )}</p>
+                i.price
+              )}</p>
                                     </button>
                                 `
-                            )
-                            .join("")}
+          )
+          .join("")}
                         </div>
                         <div class="flex gap-5 flex-row">
                           ${denom
-                            .filter((val) => val.promo)
-                            .map(
-                              (i, index) =>
-                                `
+          .filter((val) => val.promo)
+          .map(
+            (i, index) =>
+              `
                                     <button 
                                         data-id="${i.id}" 
                                         data-time="${i.time}" 
@@ -91,9 +90,8 @@ const TopupModal = () => {
                                         class="denom-btn flex flex-col bg-[#f9e5d9] w-[50%] h-[130px] gap-1 items-start justify-start border-2 rounded-[16px] border-[#f9dec2] px-5">
                                         <p class="bg-gradient-to-t from-[#EF2328] to-[#FB942B] text-white px-2 py-1 flex text-center text-[13px] rounded-b-xl">Promo<p/>
                                         
-                                        <p class="text-black font-bold text-[16px]">${
-                                          i.time
-                                        }</p>
+                                        <p class="text-black font-bold text-[16px]">${i.time
+              }</p>
 
                                         <div class="flex flex-row gap-2 items-center justify-start">
                                             
@@ -120,17 +118,17 @@ const TopupModal = () => {
                                         
                                         <div class="flex flex-col items-start">
                                                 <p class="text-[#ED0226] font-bold text-[16px]">${formatRupiah(
-                                                  i.price
-                                                )}</p>
+                i.price
+              )}</p>
                                                 <p class="text-[#9CA9B9] line-through text-sm">${formatRupiah(
-                                                  i.oldPrice
-                                                )}</p>
+                i.oldPrice
+              )}</p>
                                             </div>
                                         </div>
                                     </button>
                                 `
-                            )
-                            .join("")}
+          )
+          .join("")}
                         </div>
                         <button
                             id="myButton"

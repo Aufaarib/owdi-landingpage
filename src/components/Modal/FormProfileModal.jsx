@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import SDKModal from "./S&KModal";
+
+const mySwal = withReactContent(Swal);
 
 const Inputs = ({ title, placeholder, id, children }) => {
   return (
@@ -187,10 +189,11 @@ const SwalContent = () => {
         <button
           onClick={() => handleSubmitProfile()}
           disabled={!name || !nomor || !agreed || !calling_pick || !gender}
-          className={`h-[40px] rounded-full text-[14px] font-semibold text-white ${!name || !nomor || !agreed || !calling_pick || !gender
+          className={`h-[40px] rounded-full text-[14px] font-semibold text-white ${
+            !name || !nomor || !agreed || !calling_pick || !gender
               ? "bg-gray-400"
               : "bg-gradient-to-r from-[#EF2328] to-[#FB942B]"
-            }`}
+          }`}
         >
           Lanjutkan
         </button>
@@ -201,14 +204,9 @@ const SwalContent = () => {
 
 const FormProfileModal = () => {
   const openFormProfileModal = () => {
-    const wrapper = document.createElement("div");
-
-    // Render the React component inside the div
-    ReactDOM.render(<SwalContent />, wrapper);
-
-    Swal.fire({
+    mySwal.fire({
       allowOutsideClick: false,
-      html: wrapper,
+      html: <SwalContent />,
       showConfirmButton: false,
       customClass: {
         popup: "bg-white w-[328px] h-auto rounded-[20px] shadow-lg p-0 flex",

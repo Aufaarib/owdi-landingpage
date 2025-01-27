@@ -2,6 +2,9 @@ import { IconArrowLeft, IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import ReactDOM from "react-dom";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const mySwal = withReactContent(Swal);
 
 const SwalContent = () => {
   return (
@@ -42,15 +45,9 @@ const SwalContent = () => {
 
 const EndChatModal = () => {
   const openEndChatModal = () => {
-    // console.log("noSK", nomor);
-    const wrapper = document.createElement("div");
-
-    // Render the React component insid e the div
-    ReactDOM.render(<SwalContent />, wrapper);
-
-    Swal.fire({
+    mySwal.fire({
       allowOutsideClick: false,
-      html: wrapper,
+      html: <SwalContent />,
       showConfirmButton: false,
       customClass: {
         popup: "bg-white w-[328px] h-auto rounded-[20px] shadow-lg p-0 flex",
@@ -58,7 +55,7 @@ const EndChatModal = () => {
     });
   };
   const closeModal = () => {
-    Swal.close();
+    mySwal.close();
   };
 
   return { openEndChatModal, closeModal };

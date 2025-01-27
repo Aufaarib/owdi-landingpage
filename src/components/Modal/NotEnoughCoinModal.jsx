@@ -1,11 +1,12 @@
-import { IconArrowLeft, IconX } from "@tabler/icons-react";
-import ReactDOM from "react-dom";
+import { IconX } from "@tabler/icons-react";
 import Swal from "sweetalert2";
-import FormProfileModal from "./FormProfileModal";
+import withReactContent from "sweetalert2-react-content";
 import TopUpMDL from "./TopUpMDL";
 
+const mySwal = withReactContent(Swal);
+
 const SwalContent = () => {
-  const { openTopUpMDL } = TopUpMDL
+  const { openTopUpMDL } = TopUpMDL;
   return (
     <div className="w-full bg-white rounded-[20px] p-4 z-50 flex flex-col gap-5">
       <div className="flex flex-row w-full justify-between">
@@ -31,15 +32,9 @@ const SwalContent = () => {
 
 const NotEnoughCoinModal = () => {
   const openNotEnoughCoinModal = () => {
-    // console.log("noSK", nomor);
-    const wrapper = document.createElement("div");
-
-    // Render the React component insid e the div
-    ReactDOM.render(<SwalContent />, wrapper);
-
-    Swal.fire({
+    mySwal.fire({
       allowOutsideClick: false,
-      html: wrapper,
+      html: <SwalContent />,
       showConfirmButton: false,
       customClass: {
         popup: "bg-white w-[328px] h-auto rounded-[20px] shadow-lg p-0 flex",

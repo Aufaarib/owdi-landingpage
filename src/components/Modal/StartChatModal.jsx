@@ -1,9 +1,11 @@
-import ReactDOM from "react-dom";
-import Swal from "sweetalert2";
 import { IconX } from "@tabler/icons-react";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import TopUpMDL from "./TopUpMDL";
+
+const mySwal = withReactContent(Swal);
 
 const StartChatModal = () => {
   const router = useRouter();
@@ -51,26 +53,18 @@ const StartChatModal = () => {
   };
 
   const openStartChatModal = () => {
-    // console.log("noSK", nomor);
-    const wrapper = document.createElement("div");
-
-    // Render the React component insid e the div
-    ReactDOM.render(<SwalContent />, wrapper);
-
-    Swal.fire({
+    mySwal.fire({
       allowOutsideClick: false,
-      html: wrapper,
+      html: <SwalContent />,
       showConfirmButton: false,
       customClass: {
         popup: "bg-white w-[328px] h-auto rounded-[20px] shadow-lg p-0 flex",
       },
     });
   };
-
   const closeModal = () => {
     Swal.close();
   };
-
   return { openStartChatModal, closeModal, setUid };
 };
 

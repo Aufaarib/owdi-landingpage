@@ -1,3 +1,4 @@
+import EndChatModal from "@/components/Modal/EndChatModal";
 import { IconProgress, IconX } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -12,11 +13,13 @@ const Bicara = () => {
   const char_uid = params?.uid;
   const [isStreamReady, setIsStreamReady] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const { openEndChatModal } = EndChatModal();
 
   const buttonClose = () => {
     // Simpan waktu yang tersisa saat buttonClose dipanggil
     // localStorage.setItem("remainingTime", Date.now() + remainingTime);
-    router.back();
+    // router.back();
+    openEndChatModal();
   };
 
   const AvatarStreamer = dynamic(
@@ -67,7 +70,7 @@ const Bicara = () => {
         </div>
 
         <button
-          onClick={buttonClose}
+          onClick={() => buttonClose()}
           className="absolute right-4 bg-gray-400 px-3 py-1 rounded-full text-white"
         >
           <IconX size={24} />

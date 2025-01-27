@@ -1,15 +1,10 @@
 "use client";
 
-import {
-  StreamPlayer,
-  useAvatarStream,
-  useRecordAndSTTForContinuous,
-} from "@avatara/avatar-stream";
-import axios from "axios";
-import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
-import ContinuousSessionButton from "./Buttons/ContinuousSessionButton";
+import { StreamPlayer, useAvatarStream } from "@avatara/avatar-stream";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import axios from "axios";
+import { useState } from "react";
+import ContinuousSessionButton from "./Buttons/ContinuousSessionButton";
 
 // import { ContinuousSessionButtonRef } from "./buttons/ContinuousButton";
 const StreamHandler = ({
@@ -36,8 +31,11 @@ const StreamHandler = ({
     initPlayer,
   } = useAvatarStream({
     star,
+    onPlaying: () => {
+      console.log("Playing");
+    },
     onSpeechEnd: () => {
-      console.log("dsada");
+      console.log("Ended");
     },
   });
 
@@ -164,7 +162,6 @@ const StreamHandler = ({
   return (
     <>
       <StreamPlayer
-        // containerClassName="w-full h-full"
         containerStyle={{
           width: "100%",
           height: "100%",
@@ -172,7 +169,6 @@ const StreamHandler = ({
           display: "flex",
           alignItems: "center",
           justifyItems: "center",
-          // marginLeft: "0.2px",
         }}
         isTalking={isAvatarTalking}
         streamRefs={streamRefs}

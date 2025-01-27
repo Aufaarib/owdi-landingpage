@@ -10,10 +10,9 @@ const ContinuousSessionButton = ({
   startSession,
   endSession,
   uploadAudioFn,
-  // onTranscription,
+  onTranscription,
   onError,
   initPlayer,
-  isAvatarTalking,
 }) => {
   const {
     userSpeaking,
@@ -30,14 +29,11 @@ const ContinuousSessionButton = ({
     isReady,
   } = useRecordAndSTTForContinuous({
     uploadAudioFn,
-    // onTranscription,
+    onTranscription,
     onError,
     initPlayer,
     startOnLoad: false,
   });
-
-  // console.log("userSpeaking", userSpeaking);
-  // console.log("isAvatarTalking", isAvatarTalking);
 
   const handleStartSession = async () => {
     await startSession();
@@ -46,7 +42,8 @@ const ContinuousSessionButton = ({
 
   const handleEndSession = async () => {
     await endSession();
-    stop();
+    pause();
+    // stop();
   };
 
   return (
@@ -62,7 +59,7 @@ const ContinuousSessionButton = ({
             }}
             className={`w-full flex flex-row items-center h-[40px] justify-center px-6 text-white text-[14px] gap-3 font-bold rounded-full`}
           >
-            {!isReady ? (
+            {!isReady || isLoading ? (
               <IconLoader className="animate-spin" />
             ) : (
               <>

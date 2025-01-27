@@ -1,27 +1,32 @@
 "use client";
 
-import {
-  StreamPlayer,
-  useAvatarStream,
-  useRecordAndSTTForContinuous,
-} from "@avatara/avatar-stream";
-import Cookies from "js-cookie";
-import { useEffect, useMemo, useState } from "react";
-import ContinuousSessionButton from "./ContinuousSessionButton";
+import { StreamPlayer, useAvatarStream } from "@avatara/avatar-stream";
+import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import axios from "axios";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import ContinuousSessionButton from "./Buttons/ContinuousSessionButton";
 
 // import { ContinuousSessionButtonRef } from "./buttons/ContinuousButton";
 const StreamHandler = ({
-  interaction,
-  enableInterrupt,
+  // interaction,
+  // enableInterrupt,
   // enableText = true,
-  onStart,
+  // onStart,
   star,
-  onStreamStatusUpdate,
+  // onStreamStatusUpdate,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [isTranscriptHidden, setIsTranscriptHidden] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const {
     streamRefs,
@@ -29,13 +34,20 @@ const StreamHandler = ({
     // isSpeechPaused,
     isAvatarTalking,
     pause,
-    // resume,
+    onError,
+    resume,
     speak,
     initPlayer,
   } = useAvatarStream({
     star,
+    onPlaying: () => {
+      console.log("Playing");
+    },
     onSpeechEnd: () => {
-      console.log("dsada");
+      console.log("Ended");
+    },
+    onError: (err) => {
+      alert("Microphone not found!. please check your device, and try again.");
     },
   });
 
@@ -43,7 +55,6 @@ const StreamHandler = ({
     setIsLoading(true);
     try {
       const conversation_uid = localStorage.getItem("conversation_uid");
-
 
       if (!conversation_uid) {
         throw new Error("Conversation UID not found");
@@ -54,44 +65,42 @@ const StreamHandler = ({
         throw new Error("Token not found");
       }
 
-
       const formData = new FormData();
 
       formData.append("conversation_uid", conversation_uid || "");
       formData.append("audio", audioBlob);
 
-      const response = await fetch("/api/avatara-apis/test-sts", {
+      // console.log(audioBlob);
+      // console.log(formData.get("audio"));
+      // console.log(formData.get("conversation_uid"));
+
+      // if (formData) {
+      const response = await fetch("/api/avatara-apis/post-sts", {
         method: "POST",
         body: formData,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      if (!response.ok) {
+        throw new Error("Failed to upload audio");
+      }
 
+      // console.log(response);
 
-      await speak(response);
-
+      await speak(response, (texStream) => {
+        setMessages((prev) => [...prev, texStream]);
+      });
       return "";
     } catch (error) {
       throw new Error("Failed to get transcription");
     } finally {
       setIsLoading(false);
-
     }
   };
 
-  const { amplitude, start, stop, pauseListening, resumeListening, isReady } =
-    useRecordAndSTTForContinuous({
-      uploadAudioFn,
-      // onTranscription,
-      // onError,
-      initPlayer,
-      startOnLoad: false,
-    });
-
   const handleEndSession = async () => {
     pause();
-    stop();
     setIsSessionActive(false);
   };
 
@@ -104,14 +113,14 @@ const StreamHandler = ({
 
       const data = await response.data;
 
-      console.log(response.data);
+      // console.log(response.data);
 
       if (!data.stream_token || !data.token) {
         throw new Error("Invalid token response");
       }
 
-      localStorage.setItem("stream_token", data.stream_token);
-      localStorage.setItem("token", data.token);
+      // localStorage.setItem("stream_token", data.stream_token);
+      // localStorage.setItem("token", data.token);
 
       const conversationResponse = await axios.get(
         `/api/avatara-apis/get-conversation?star_uid=${star.uid}`,
@@ -137,7 +146,6 @@ const StreamHandler = ({
       localStorage.setItem("conversation_uid", conversationData.uid);
 
       setIsSessionActive(true);
-      start();
     } catch (error) {
       console.error(error);
     } finally {
@@ -145,77 +153,91 @@ const StreamHandler = ({
     }
   };
 
-  const disabled = useMemo(() => {
-    const _disabled = isLoading;
+  // const disabled = useMemo(() => {
+  //   const _disabled = isLoading;
 
-    return enableInterrupt ? _disabled : _disabled || isSpeakLoading;
-  }, [enableInterrupt, isLoading, isSpeakLoading]);
-
-  useEffect(() => {
-    handleEndSession();
-  }, [enableInterrupt, interaction]);
+  //   return enableInterrupt ? _disabled : _disabled || isSpeakLoading;
+  // }, [enableInterrupt, isLoading, isSpeakLoading]);
 
   // useEffect(() => {
-  //   handleStartSession();
+  //   handleEndSession();
+  // }, [enableInterrupt, interaction]);
+
+  // useEffect(() => {
+  //   handleEndSession();
   // }, []);
 
   return (
     <>
       <StreamPlayer
-        // containerClassName="w-[640px] h-[360px]" // default
-        containerStyle={{ width: "100%", height: "100%" }}
+        containerStyle={{
+          width: "100%",
+          height: "100%",
+          backgroundColor: "black",
+          display: "flex",
+          alignItems: "center",
+          justifyItems: "center",
+        }}
         isTalking={isAvatarTalking}
         streamRefs={streamRefs}
         onLoadStart={() => console.log("load")}
         onLoadedData={() => console.log("done")}
       />
-      <div className="absolute bottom-0 w-full bg-white flex flex-col justify-center p-4 pt-7 gap-2 py-7 rounded-t-2xl z-50">
-        <button
-          onClick={() => handleStartSession()}
-          style={{
-            background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
-          }}
-          className="w-full flex flex-row items-center h-[40px] justify-center px-6 text-white text-[14px] gap-3 font-bold rounded-full"
-        >
-          <p>Bicara</p>
-          <Image
-            src={"/icons/icon-microphone.png"}
-            alt="logo"
-            className="object-cover sm:block"
-            width={15}
-            height={15}
-          />
-        </button>
-        <p className="text-center text-xs text-[#718290]">
-          Microfon sudah siap dipakai
-        </p>
-        {/* <p className="text-center text-sm text-[#FF0025] font-semibold mt-2">
-          Sisa Waktu: {countdownTime}
-        </p> */}
-      </div>
-      {/* {interaction === 'continuous' ? (
-        <ContinuousSessionButton
-          ref={sessionButtonRef}
-          endSession={handleEndSession}
-          initPlayer={initPlayer}
-          isLoading={isLoading || isSpeakLoading}
-          isSessionActive={isSessionActive}
-          startSession={handleStartSession}
-          uploadAudioFn={uploadAudioFn}
-          // onTranscription={speak}
-        />
-      ) : (
-        <HoldSpeakButton
-          disabled={disabled}
-          endSession={handleEndSession}
-          initPlayer={initPlayer}
-          isLoading={isLoading || isSpeakLoading}
-          isSessionActive={isSessionActive}
-          startSession={handleStartSession}
-          uploadAudioFn={uploadAudioFn}
-          // onTranscription={speak}
-        />
-      )} */}
+      {messages?.length > 0 && (
+        <div className="absolute bottom-[100px] z-30 w-full">
+          <button
+            onClick={() => setIsTranscriptHidden(!isTranscriptHidden)}
+            className="flex flex-row w-full items-end justify-end text-white"
+          >
+            <span>
+              {isTranscriptHidden ? "Tampilkan Transkrip" : "Tutup Transkrip"}
+            </span>
+            {isTranscriptHidden ? <IconChevronUp /> : <IconChevronDown />}
+          </button>
+          <div className="bg-opacity-40 p-4 backdrop-blur-sm backdrop-filter w-full max-h-48 overflow-y-auto">
+            {!isTranscriptHidden &&
+              messages?.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${
+                    message.role === "ai" ? "justify-start" : "justify-end"
+                  } mb-2`}
+                >
+                  <div className="flex flex-col gap-3">
+                    <p
+                      className={`text-xs text-white font-bold ${
+                        message.role === "ai" ? "text-left" : "text-right"
+                      }`}
+                    >
+                      {message.role === "ai" ? star.name : "You"}
+                    </p>
+                    <p
+                      className={`text-xs bg-slate-200 border-2 border-white p-3 text-[#001A41] rounded-b-2xl ${
+                        message.role === "ai"
+                          ? "rounded-tr-2xl"
+                          : "rounded-tl-2xl"
+                      }`}
+                    >
+                      {message.value}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            {/* Scroll Anchor */}
+            <div ref={messagesEndRef}></div>
+          </div>
+        </div>
+      )}
+      <ContinuousSessionButton
+        isLoading={isLoading}
+        isSessionActive={isSessionActive}
+        initPlayer={initPlayer}
+        uploadAudioFn={uploadAudioFn}
+        startSession={handleStartSession}
+        endSession={handleEndSession}
+        // onError={handleError}
+        isAvatarTalking={isAvatarTalking}
+      />
     </>
   );
 };

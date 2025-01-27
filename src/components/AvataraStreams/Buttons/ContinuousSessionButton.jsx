@@ -30,7 +30,9 @@ const ContinuousSessionButton = ({
   } = useRecordAndSTTForContinuous({
     uploadAudioFn,
     onTranscription,
-    onError,
+    onError: (err) => {
+      alert("Microphone not found!. please check your device, and try again.");
+    },
     initPlayer,
     startOnLoad: false,
   });
@@ -85,13 +87,28 @@ const ContinuousSessionButton = ({
           )}
         </div>
       ) : (
-        <div className="absolute bottom-0 w-full bg-white flex flex-col justify-center p-4 pt-7 gap-2 py-7 rounded-t-2xl z-50">
+        <div className="absolute bottom-0 w-full bg-white flex flex-col justify-center p-4 pt-7 gap-2 py-7 rounded-t-2xl z-50 ">
           <button
             onClick={() => handleEndSession()}
+            // style={{
+            //   background: `linear-gradient(to right, rgba(234, 88, 12, ${Math.min(
+            //     amplitude * 5,
+            //     1
+            //   )}), rgba(251, 146, 60, ${Math.min(amplitude * 5, 1)}))`,
+            //   padding: `${Math.max(amplitude * 5, 2)}px`,
+            //   zIndex: 10,
+            // }}
             style={{
               background: "linear-gradient(45deg, #EF2328 0%, #FB942B 100%)",
+              boxShadow: `0 0 10px 3px rgba(239, 35, 40, ${Math.min(
+                amplitude * 5,
+                1
+              )}), 0 0 20px 6px rgba(251, 146, 43, ${Math.min(
+                amplitude * 5,
+                1
+              )})`,
             }}
-            className="w-full flex flex-row items-center h-[40px] justify-center px-6 text-white text-[14px] gap-3 font-bold rounded-full"
+            className={`w-full flex flex-row items-center h-[40px] justify-center px-6 text-white text-[14px] gap-3 font-bold rounded-full`}
           >
             <p>Kamu Sedang Bicara</p>
             <img src="/icons/IconR.png" className="w-6 h-6" alt="icon" />

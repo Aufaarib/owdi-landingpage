@@ -64,9 +64,20 @@ const Bicara = () => {
           />
         </button>
 
-        <div className="absolute left-1/2 transform -translate-x-1/2 flex justify-center items-center w-[185px] px-2 py-1 bg-gray-400 rounded-full">
-          <p className="text-[14px] mr-1 text-white">Sedang Bicara</p>
-          <img src="/icons/IconR.png" className="w-6 h-6" alt="icon" />
+        <div className="absolute left-1/2 transform -translate-x-1/2 top-2 gap-2 flex flex-col">
+          <div className="flex justify-center items-center w-[185px] px-2 py-1 bg-gray-400 rounded-full">
+            <p className="text-[14px] mr-1 text-white">Sedang Bicara</p>
+            <img src="/icons/IconR.png" className="w-6 h-6" alt="icon" />
+          </div>
+
+          <div className="flex justify-center items-center w-[185px] px-2 py-1">
+            <p
+              className="text-[18px] mr-1 text-white font-[600] text-shadow-xl bg-transparent"
+              // style={{ textShadow: "0px 1px 15px 0px #020202" }}
+            >
+              02:04
+            </p>
+          </div>
         </div>
 
         <button

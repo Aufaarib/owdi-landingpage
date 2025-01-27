@@ -3,7 +3,7 @@
 import { StreamPlayer, useAvatarStream } from "@avatara/avatar-stream";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ContinuousSessionButton from "./Buttons/ContinuousSessionButton";
 
 // import { ContinuousSessionButtonRef } from "./buttons/ContinuousButton";
@@ -19,6 +19,14 @@ const StreamHandler = ({
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isTranscriptHidden, setIsTranscriptHidden] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const {
     streamRefs,
@@ -26,6 +34,7 @@ const StreamHandler = ({
     // isSpeechPaused,
     isAvatarTalking,
     pause,
+    onError,
     resume,
     speak,
     initPlayer,
@@ -36,6 +45,9 @@ const StreamHandler = ({
     },
     onSpeechEnd: () => {
       console.log("Ended");
+    },
+    onError: (err) => {
+      alert("Microphone not found!. please check your device, and try again.");
     },
   });
 
@@ -85,10 +97,6 @@ const StreamHandler = ({
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleError = () => {
-    console.log("EROOOORRR");
   };
 
   const handleEndSession = async () => {
@@ -191,7 +199,7 @@ const StreamHandler = ({
               messages?.map((message, index) => (
                 <div
                   key={index}
-                  className={`flex  ${
+                  className={`flex ${
                     message.role === "ai" ? "justify-start" : "justify-end"
                   } mb-2`}
                 >
@@ -208,13 +216,15 @@ const StreamHandler = ({
                         message.role === "ai"
                           ? "rounded-tr-2xl"
                           : "rounded-tl-2xl"
-                      } `}
+                      }`}
                     >
                       {message.value}
                     </p>
                   </div>
                 </div>
               ))}
+            {/* Scroll Anchor */}
+            <div ref={messagesEndRef}></div>
           </div>
         </div>
       )}
@@ -225,7 +235,7 @@ const StreamHandler = ({
         uploadAudioFn={uploadAudioFn}
         startSession={handleStartSession}
         endSession={handleEndSession}
-        onError={handleError}
+        // onError={handleError}
         isAvatarTalking={isAvatarTalking}
       />
     </>

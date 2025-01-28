@@ -119,8 +119,8 @@ const StreamHandler = ({
         throw new Error("Invalid token response");
       }
 
-      // localStorage.setItem("stream_token", data.stream_token);
-      // localStorage.setItem("token", data.token);
+      localStorage.setItem("stream_token", data.stream_token);
+      localStorage.setItem("token", data.token);
 
       const conversationResponse = await axios.get(
         `/api/avatara-apis/get-conversation?star_uid=${star.uid}`,

@@ -47,7 +47,7 @@ const StreamHandler = ({
       console.log("Ended");
     },
     onError: (err) => {
-      alert("Microphone not found!. please check your device, and try again.");
+      alert(err);
     },
   });
 
